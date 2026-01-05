@@ -148,7 +148,7 @@ export async function POST(req: Request) {
 
             // Add marketplace context to the prompt if products found
             const enhancedPrompt = productContext 
-              ? `${productContext}\n\nIMPORTANT: When mentioning products, you MUST use the EXACT Product ID shown above. Do NOT make up or shorten product IDs. Use the complete UUID exactly as provided in the "Product ID:" field.\n\nUser Question: ${userPrompt}\n\nPlease answer the user's question. If relevant products are available in our marketplace (listed above), mention them with their exact Product IDs in markdown links like: [Product Name](/dashboard/marketplace/EXACT_PRODUCT_ID)`
+              ? `${productContext}\n\nIMPORTANT: When mentioning products, you MUST use the EXACT Product ID shown above. Do NOT make up or shorten product IDs. Use the complete UUID exactly as provided in the \"Product ID:\" field.\n\nCRITICAL: Use ONLY relative paths - NEVER include domain names like hackboiler.com or any other domain. Links must start with /dashboard/marketplace/ only.\n\nUser Question: ${userPrompt}\n\nPlease answer the user's question. If relevant products are available in our marketplace (listed above), mention them with their exact Product IDs in markdown links like: [Product Name](/dashboard/marketplace/EXACT_PRODUCT_ID)`
               : userPrompt;
 
             // Stream from Ollama (with images if available)
@@ -163,7 +163,7 @@ export async function POST(req: Request) {
             const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!);
             
             // Build marketplace-aware system prompt
-            const marketplaceSystemPrompt = `You are a helpful AI assistant for HackBoiler, a platform with an integrated marketplace.
+            const marketplaceSystemPrompt = `You are a helpful AI assistant for our platform with an integrated marketplace.
 
 Your responsibilities:
 1. Answer user questions helpfully and accurately
@@ -171,23 +171,29 @@ Your responsibilities:
 3. If products are available, mention them with pricing and provide direct links
 4. Be conversational and friendly
 
+IMPORTANT: Never mention \"HackBoiler\" or any specific platform brand name in your responses. Always refer to the platform generically as \"our platform\" or \"our marketplace\".
+
 ${productContext}
 
 CRITICAL INSTRUCTIONS FOR PRODUCT LINKS:
 - You MUST use the EXACT Product ID provided above for each product
 - Do NOT make up or simplify product IDs
-- Do NOT use shortened IDs like "101" or "p_2024002"
-- Use the FULL UUID exactly as shown in "Product ID:" field
+- Do NOT use shortened IDs like \"101\" or \"p_2024002\"
+- Use the FULL UUID exactly as shown in \"Product ID:\" field
 - Link format: [Product Name](/dashboard/marketplace/EXACT_PRODUCT_ID_HERE)
-- Example: If Product ID is "f30377e2-3799-4c47-ac74-20e884ad482b", use that EXACT string
+- Example: If Product ID is \"f30377e2-3799-4c47-ac74-20e884ad482b\", use that EXACT string
+- NEVER include domain names (like hackboiler.com or any other domain) in links
+- ALWAYS use ONLY relative paths starting with /dashboard/marketplace/
+- DO NOT generate full URLs - only relative paths
 
 When mentioning products:
 - Include the product name, price, and stock status
 - Copy the EXACT Product ID from the list above
 - Create clickable markdown links using the exact format shown
 - Be natural and enthusiastic when recommending products
+- Use ONLY relative paths, never full URLs with domains
 
-Remember: ALWAYS use the complete Product ID exactly as provided - never abbreviate or modify it!`;
+Remember: ALWAYS use the complete Product ID exactly as provided - never abbreviate or modify it! NEVER include domain names in your links!`;
 
             const geminiModel = genAI.getGenerativeModel({ 
               model: model || "gemini-2.5-flash",
@@ -272,7 +278,7 @@ Remember: ALWAYS use the complete Product ID exactly as provided - never abbrevi
                 try {
                   console.log("Starting background title generation for:", conversationId);
                   
-                  const systemPrompt = `You are a helpful AI assistant for HackBoiler, a platform with an integrated marketplace.
+                  const systemPrompt = `You are a helpful AI assistant for our platform with an integrated marketplace.
 
 Your responsibilities:
 1. Answer user questions helpfully and accurately
@@ -315,7 +321,7 @@ Title: ${userPrompt.substring(0, 100)}
                     // Use Gemini lite model for title generation
                     console.log("Using Gemini lite for title generation");
                     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!);
-                    const geminiModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+                    const geminiModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
                     
                     const titleResult = await geminiModel.generateContent(titleMessages[0].content);
                     title = titleResult.response.text().trim().replace(/['\"]/g, '');

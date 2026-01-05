@@ -186,7 +186,7 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder="Message Gemini..."
-              className="flex-1 min-h-[44px] max-h-[200px] border-none focus-visible:ring-0 resize-none p-2 text-base shadow-none bg-transparent dark:text-gray-100 dark:placeholder-gray-400"
+              className="flex-1 min-h-[44px] max-h-[200px] border-none focus-visible:ring-0 focus-visible:ring-offset-0 resize-none p-2 text-base shadow-none bg-transparent dark:text-gray-100 dark:placeholder-gray-400"
               rows={1}
               disabled={disabled}
             />
@@ -217,7 +217,7 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
               <button
                 type="button"
                 onClick={() => setShowModelDropdown(!showModelDropdown)}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 disabled={disabled}
               >
                 {selectedModel?.provider === 'gemini' ? (
