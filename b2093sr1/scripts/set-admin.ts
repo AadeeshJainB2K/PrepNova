@@ -10,7 +10,7 @@ async function setAdmin() {
     const result = await db
       .update(users)
       .set({ role: 'admin' })
-      .where(eq(users.email, 'aadeeshjain15@gmail.com'))
+      .where(eq(users.email, 'sunidhithakur1127@gmail.com'))
       .returning();
 
     if (result.length > 0) {
