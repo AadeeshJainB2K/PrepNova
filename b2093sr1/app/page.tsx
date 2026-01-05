@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
-
+import { TechParticleSection } from "@/components/landing/TechParticleSection";
+import { SystemStatusSection } from "@/components/landing/SystemStatusSection";
 export const dynamic = 'force-dynamic';
 
 export default function Home() {
@@ -8,6 +9,8 @@ export default function Home() {
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
       <HeroSection />
+      <TechParticleSection />
+      <SystemStatusSection />
     </div>
   );
 }
