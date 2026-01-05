@@ -1,4 +1,3 @@
-import AboutWorkflowCanvas from "@/components/landing/AboutWorkflowCanvas";
 export default function AboutPage() {
   return (
     <section className="min-h-screen bg-black text-white pt-40 pb-32">
@@ -101,16 +100,6 @@ export default function AboutPage() {
             
           </div>
         </div>
-        <main className="bg-black text-white min-h-screen pt-40">
-          <div className="text-center mb-20">
-            <h1 className="text-5xl font-semibold">About HackBoiler</h1>
-            <p className="mt-4 text-neutral-400">
-              System-level view of the product and team.
-            </p>
-          </div>
-
-          <AboutWorkflowCanvas />
-        </main>
       </div>
     </section>
 
