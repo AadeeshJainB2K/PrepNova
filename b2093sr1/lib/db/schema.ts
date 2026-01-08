@@ -319,3 +319,272 @@ export const sellerReviewsRelations = relations(sellerReviews, ({ one }) => ({
     relationName: "reviewAuthor",
   }),
 }));
+
+// ============================================
+// EXAM-COMPASS TABLES
+// ============================================
+
+// Exams table - stores all competitive exams
+export const exams = pgTable("exams", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(), // e.g., "JEE Mains"
+  fullName: text("full_name").notNull(), // e.g., "Joint Entrance Examination - Main"
+  description: text("description").notNull(),
+  category: text("category").notNull(), // Engineering, Medical, Law, Civil Services, etc.
+  logoUrl: text("logo_url"),
+  difficulty: text("difficulty").notNull(), // Easy, Medium, Hard
+  totalSeats: integer("total_seats"),
+  estimatedApplicants: integer("estimated_applicants"),
+  syllabus: text("syllabus"), // JSON string with subjects and topics
+  careerPaths: text("career_paths"), // JSON string with job/college opportunities
+  examPattern: text("exam_pattern"), // JSON string with exam structure
+  eligibility: text("eligibility"), // JSON string with eligibility criteria
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// Exam timelines - important dates for each exam
+export const examTimelines = pgTable("exam_timelines", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  examId: text("exam_id")
+    .notNull()
+    .references(() => exams.id, { onDelete: "cascade" }),
+  eventType: text("event_type").notNull(), // registration, admit_card, exam_date, result
+  eventName: text("event_name").notNull(),
+  startDate: timestamp("start_date", { mode: "date" }),
+  endDate: timestamp("end_date", { mode: "date" }),
+  description: text("description"),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// Mock questions - AI-generated and previous year questions
+export const mockQuestions = pgTable("mock_questions", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  examId: text("exam_id")
+    .notNull()
+    .references(() => exams.id, { onDelete: "cascade" }),
+  subject: text("subject").notNull(), // Physics, Chemistry, Math, etc.
+  topic: text("topic").notNull(), // Specific topic within subject
+  question: text("question").notNull(),
+  options: text("options").notNull(), // JSON array of options
+  correctAnswer: text("correct_answer").notNull(),
+  explanation: text("explanation").notNull(),
+  difficulty: text("difficulty").notNull(), // Easy, Medium, Hard
+  questionType: text("question_type").notNull(), // MCQ, Numerical, etc.
+  isAIGenerated: boolean("is_ai_generated").default(false).notNull(),
+  basedOnYear: integer("based_on_year"), // Year of previous question if applicable
+  tags: text("tags"), // JSON array of tags for better categorization
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// User exam preferences - which exams users are preparing for
+export const userExamPreferences = pgTable("user_exam_preferences", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  examId: text("exam_id")
+    .notNull()
+    .references(() => exams.id, { onDelete: "cascade" }),
+  targetYear: integer("target_year").notNull(),
+  preferredDifficulty: text("preferred_difficulty").default("Medium"),
+  targetRank: integer("target_rank"),
+  targetCollege: text("target_college"),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// User progress - track performance on mock tests
+export const userProgress = pgTable("user_progress", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  examId: text("exam_id")
+    .notNull()
+    .references(() => exams.id, { onDelete: "cascade" }),
+  questionId: text("question_id")
+    .notNull()
+    .references(() => mockQuestions.id, { onDelete: "cascade" }),
+  userAnswer: text("user_answer").notNull(),
+  isCorrect: boolean("is_correct").notNull(),
+  timeSpent: integer("time_spent"), // Time in seconds
+  attemptedAt: timestamp("attempted_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// Mock test sessions - track individual test attempts
+export const mockTestSessions = pgTable("mock_test_sessions", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  examId: text("exam_id")
+    .notNull()
+    .references(() => exams.id, { onDelete: "cascade" }),
+  difficulty: text("difficulty").notNull(),
+  totalQuestions: integer("total_questions").notNull(),
+  correctAnswers: integer("correct_answers").default(0).notNull(),
+  score: decimal("score", { precision: 5, scale: 2 }),
+  timeSpent: integer("time_spent"), // Total time in seconds
+  status: text("status").default("in_progress").notNull(), // in_progress, completed, abandoned
+  startedAt: timestamp("started_at", { mode: "date" }).defaultNow().notNull(),
+  completedAt: timestamp("completed_at", { mode: "date" }),
+});
+
+// Study groups - for peer collaboration
+export const studyGroups = pgTable("study_groups", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  description: text("description"),
+  examId: text("exam_id")
+    .notNull()
+    .references(() => exams.id, { onDelete: "cascade" }),
+  createdBy: text("created_by")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  maxMembers: integer("max_members").default(10).notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// Study group members
+export const studyGroupMembers = pgTable("study_group_members", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  groupId: text("group_id")
+    .notNull()
+    .references(() => studyGroups.id, { onDelete: "cascade" }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  role: text("role").default("member").notNull(), // admin, member
+  joinedAt: timestamp("joined_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// User achievements and badges
+export const userAchievements = pgTable("user_achievements", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  achievementType: text("achievement_type").notNull(), // streak, questions_solved, perfect_score, etc.
+  achievementName: text("achievement_name").notNull(),
+  description: text("description"),
+  iconUrl: text("icon_url"),
+  earnedAt: timestamp("earned_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// ============================================
+// EXAM-COMPASS RELATIONS
+// ============================================
+
+export const examsRelations = relations(exams, ({ many }) => ({
+  timelines: many(examTimelines),
+  questions: many(mockQuestions),
+  userPreferences: many(userExamPreferences),
+  studyGroups: many(studyGroups),
+  mockTestSessions: many(mockTestSessions),
+}));
+
+export const examTimelinesRelations = relations(examTimelines, ({ one }) => ({
+  exam: one(exams, {
+    fields: [examTimelines.examId],
+    references: [exams.id],
+  }),
+}));
+
+export const mockQuestionsRelations = relations(mockQuestions, ({ one, many }) => ({
+  exam: one(exams, {
+    fields: [mockQuestions.examId],
+    references: [exams.id],
+  }),
+  userProgress: many(userProgress),
+}));
+
+export const userExamPreferencesRelations = relations(userExamPreferences, ({ one }) => ({
+  user: one(users, {
+    fields: [userExamPreferences.userId],
+    references: [users.id],
+  }),
+  exam: one(exams, {
+    fields: [userExamPreferences.examId],
+    references: [exams.id],
+  }),
+}));
+
+export const userProgressRelations = relations(userProgress, ({ one }) => ({
+  user: one(users, {
+    fields: [userProgress.userId],
+    references: [users.id],
+  }),
+  exam: one(exams, {
+    fields: [userProgress.examId],
+    references: [exams.id],
+  }),
+  question: one(mockQuestions, {
+    fields: [userProgress.questionId],
+    references: [mockQuestions.id],
+  }),
+}));
+
+export const mockTestSessionsRelations = relations(mockTestSessions, ({ one }) => ({
+  user: one(users, {
+    fields: [mockTestSessions.userId],
+    references: [users.id],
+  }),
+  exam: one(exams, {
+    fields: [mockTestSessions.examId],
+    references: [exams.id],
+  }),
+}));
+
+export const studyGroupsRelations = relations(studyGroups, ({ one, many }) => ({
+  exam: one(exams, {
+    fields: [studyGroups.examId],
+    references: [exams.id],
+  }),
+  creator: one(users, {
+    fields: [studyGroups.createdBy],
+    references: [users.id],
+  }),
+  members: many(studyGroupMembers),
+}));
+
+export const studyGroupMembersRelations = relations(studyGroupMembers, ({ one }) => ({
+  group: one(studyGroups, {
+    fields: [studyGroupMembers.groupId],
+    references: [studyGroups.id],
+  }),
+  user: one(users, {
+    fields: [studyGroupMembers.userId],
+    references: [users.id],
+  }),
+}));
+
+export const userAchievementsRelations = relations(userAchievements, ({ one }) => ({
+  user: one(users, {
+    fields: [userAchievements.userId],
+    references: [users.id],
+  }),
+}));

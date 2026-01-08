@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FileText, MessageSquare, Settings, ChevronLeft, ChevronRight, ShoppingBag, Shield, Package, ShoppingCart, Users } from "lucide-react";
+import { Home, BookOpen, Brain, TrendingUp, Users, Sparkles, ShoppingBag, MessageSquare, Settings, ChevronLeft, ChevronRight, Shield, Package, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -14,14 +14,34 @@ export const navItems = [
     icon: Home,
   },
   {
+    name: "Exams",
+    href: "/dashboard/exams",
+    icon: BookOpen,
+  },
+  {
+    name: "Mock Tests",
+    href: "/dashboard/mock-tests",
+    icon: Brain,
+  },
+  {
+    name: "My Progress",
+    href: "/dashboard/progress",
+    icon: TrendingUp,
+  },
+  {
+    name: "Study Groups",
+    href: "/dashboard/study-groups",
+    icon: Users,
+  },
+  {
+    name: "AI Predictor",
+    href: "/dashboard/predictor",
+    icon: Sparkles,
+  },
+  {
     name: "Marketplace",
     href: "/dashboard/marketplace",
     icon: ShoppingBag,
-  },
-  {
-    name: "Files",
-    href: "/dashboard/files",
-    icon: FileText,
   },
   {
     name: "Chat",

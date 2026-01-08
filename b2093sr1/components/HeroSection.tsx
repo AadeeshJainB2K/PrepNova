@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Spline from "@splinetool/react-spline";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -13,46 +14,50 @@ export function HeroSection() {
             <div className="space-y-4">
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Build Your Next
+                  Your Gateway to
                 </span>
                 <br />
-                <span className="text-gray-900 dark:text-gray-100">Hackathon Project</span>
+                <span className="text-gray-900 dark:text-gray-100">Exam Success</span>
               </h1>
               <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl">
-                A production-ready boilerplate with Next.js 15, Auth.js, 3D visuals, 
-                and AI scaffolding. Ship faster, win bigger.
+                Master JEE, NEET, CLAT, and more with AI-powered mock tests, 
+                real-time progress tracking, and a community of fellow aspirants.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-6"
-              >
-                Get Started
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6 border-2 dark:border-gray-600 dark:hover:bg-gray-800"
-              >
-                View Docs
-              </Button>
+              <Link href="/dashboard/exams">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-6"
+                >
+                  Browse Exams
+                </Button>
+              </Link>
+              <Link href="/dashboard/mock-tests">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="text-lg px-8 py-6 border-2 dark:border-gray-600 dark:hover:bg-gray-800"
+                >
+                  Start Mock Test
+                </Button>
+              </Link>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-8 pt-8">
               <div>
-                <div className="text-3xl font-bold text-gray-900 dark:text-gray-100">10x</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Faster Setup</div>
+                <div className="text-3xl font-bold text-gray-900 dark:text-gray-100">6+</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Major Exams</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-gray-900 dark:text-gray-100">100%</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Type Safe</div>
+                <div className="text-3xl font-bold text-gray-900 dark:text-gray-100">10K+</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Active Users</div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-gray-900 dark:text-gray-100">AI</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Ready</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Powered</div>
               </div>
             </div>
           </div>
