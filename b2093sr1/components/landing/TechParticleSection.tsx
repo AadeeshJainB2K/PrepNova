@@ -46,10 +46,12 @@ export function TechParticleSection() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-16 gap-y-14 place-items-center">
 
             {techStack.map((tech, i) => (
-              <motion.div
+              <div
                 key={tech.name}
-                animate={floatSlow(i * 0.3)}
-                className="flex flex-col items-center gap-3"
+                className="flex flex-col items-center gap-3 animate-[float_8s_ease-in-out_infinite]"
+                style={{
+                  animationDelay: `${i * 0.3}s`,
+                }}
               >
                 <Image
                   src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tech.icon}/${tech.icon}-original.svg`}
@@ -60,7 +62,7 @@ export function TechParticleSection() {
                 <span className="text-xs text-neutral-400">
                   {tech.name}
                 </span>
-              </motion.div>
+              </div>
             ))}
 
           </div>

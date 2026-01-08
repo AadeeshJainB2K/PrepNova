@@ -28,13 +28,14 @@ export function SystemStatusSection() {
           "
         >
           {/* SUBTLE SCAN LIGHT */}
-          <motion.div
-            animate={{ x: ["-120%", "120%"] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          <div
             className="
               pointer-events-none absolute top-0 left-0 h-full w-1/3
               bg-gradient-to-r from-transparent via-white/[0.04] to-transparent
             "
+            style={{
+              animation: 'scan 8s linear infinite',
+            }}
           />
 
           {/* HEADER */}
@@ -47,16 +48,17 @@ export function SystemStatusSection() {
           {/* STATUS LIST */}
           <div className="px-10 pb-10 font-mono text-sm">
             {status.map((line, i) => (
-              <motion.div
+              <div
                 key={line}
-                initial={{ opacity: 0, y: 6 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.12 }}
                 className="
                   flex items-center gap-4 py-3
                   text-neutral-300
+                  opacity-0 translate-y-1.5
+                  animate-[fadeIn_0.5s_ease-out_forwards]
                 "
+                style={{
+                  animationDelay: `${i * 0.12}s`,
+                }}
               >
                 {/* STATUS INDICATOR */}
                 <span className="relative flex h-2.5 w-2.5">
@@ -65,7 +67,7 @@ export function SystemStatusSection() {
                 </span>
 
                 <span>{line}</span>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
