@@ -2,9 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { userProgress, mockQuestions } from "@/lib/db/schema";
-import { eq, sql, and, desc } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
+
+interface SubjectAnalysis {
+  subject: string;
+  score: number;
+  status: "excellent" | "good" | "needs improvement";
+}
+
+interface Recommendation {
+  title: string;
+  description: string;
+  priority: "high" | "medium" | "low";
+}
 
 // Benchmark data for different exams and ranks
 const BENCHMARKS: Record<string, Record<string, number>> = {
@@ -140,9 +152,10 @@ export async function POST(request: NextRequest) {
     const improvement = Math.max(0, requiredProbability - currentProbability);
 
     // Generate AI recommendations
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const recommendations = await generateRecommendations(
       EXAM_NAMES[examId] || examId,
-      subjectAnalysis,
+      subjectAnalysis as any,
       overallAccuracy,
       targetRank,
       currentProbability,
@@ -194,12 +207,12 @@ function getRequiredProbability(examId: string, targetRank: number): number {
 
 async function generateRecommendations(
   examName: string,
-  subjectAnalysis: any[],
+  subjectAnalysis: SubjectAnalysis[],
   overallAccuracy: number,
   targetRank: number,
   currentProbability: number,
   requiredProbability: number
-): Promise<any[]> {
+): Promise<Recommendation[]> {
   try {
     const prompt = `Analyze this student's performance and generate 3-5 specific, actionable study recommendations:
 
@@ -250,7 +263,7 @@ Prioritize: high for subjects <70%, medium for 70-85%, low for >85%`;
   }
 }
 
-function generateFallbackRecommendations(subjectAnalysis: any[]): any[] {
+function generateFallbackRecommendations(subjectAnalysis: SubjectAnalysis[]): Recommendation[] {
   const recommendations = [];
   
   // Sort by score (lowest first)
@@ -281,5 +294,5 @@ function generateFallbackRecommendations(subjectAnalysis: any[]): any[] {
     });
   }
 
-  return recommendations.slice(0, 5);
+  return recommendations.slice(0, 5) as Recommendation[];
 }

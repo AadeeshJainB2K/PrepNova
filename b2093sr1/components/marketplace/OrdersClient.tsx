@@ -14,6 +14,7 @@ const statusConfig = {
 };
 
 interface OrdersClientProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   orders: any[];
 }
 
@@ -23,7 +24,7 @@ export function OrdersClient({ orders }: OrdersClientProps) {
   const filteredOrders = orders.filter((order) => {
     const query = searchQuery.toLowerCase();
     const matchesOrderId = order.id.toLowerCase().includes(query);
-    const matchesProduct = order.orderItems?.some((item: any) =>
+    const matchesProduct = order.orderItems?.some((item: any) => // eslint-disable-line @typescript-eslint/no-explicit-any
       item.product?.name?.toLowerCase().includes(query)
     );
     const matchesStatus = order.status.toLowerCase().includes(query);

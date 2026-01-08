@@ -1,6 +1,6 @@
 import { getOrder } from "@/lib/marketplace/actions";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, User as UserIcon, MapPin } from "lucide-react";
+import { ArrowLeft, Calendar, MapPin } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CancelOrderButton } from "@/components/marketplace/CancelOrderButton";

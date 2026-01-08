@@ -76,7 +76,7 @@ export default function DashboardPage() {
       <div className="rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white shadow-lg">
         <h2 className="text-3xl font-bold">Welcome back{userName ? `, ${userName}` : ''}! 👋</h2>
         <p className="mt-2 text-blue-100">
-          Ready to ace your exams? Let's continue your preparation journey!
+          Ready to ace your exams? Let&apos;s continue your preparation journey!
         </p>
       </div>
 

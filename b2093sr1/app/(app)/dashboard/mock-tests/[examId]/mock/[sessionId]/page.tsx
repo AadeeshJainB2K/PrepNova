@@ -2,7 +2,7 @@
 
 import { use, useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, Brain, Clock, Trophy, Loader2, CheckCircle, XCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, Brain, Trophy, Loader2, CheckCircle, XCircle, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";

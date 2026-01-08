@@ -79,7 +79,8 @@ export function ChatMessage({ role, content, userImage, attachments }: ChatMessa
           >
             <ReactMarkdown
               components={{
-                code({ node, className, children, ...props }: any) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                code({ className, children, ...props }: any) {
                   const match = /language-(\w+)/.exec(className || "");
                   const isInline = !match;
                   return !isInline && match ? (

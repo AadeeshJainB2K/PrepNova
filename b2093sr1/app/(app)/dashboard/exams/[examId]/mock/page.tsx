@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import type { ModelInfo } from "@/app/api/models/route";
 
 // Exam data (same as in exam detail page)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const EXAM_DATA: Record<string, any> = {
   "jee-mains": { name: "JEE Mains", fullName: "Joint Entrance Examination - Main" },
   "neet": { name: "NEET", fullName: "National Eligibility cum Entrance Test" },

@@ -2,12 +2,13 @@
 
 import { use, useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, Brain, Clock, Trophy, Loader2, CheckCircle, XCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, Brain, Trophy, Loader2, CheckCircle, XCircle, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const EXAM_DATA: Record<string, any> = {
   "jee-mains": { name: "JEE Mains" },
   "neet": { name: "NEET" },
@@ -34,6 +35,7 @@ export default function MockTestInterfacePage({
   const { examId, sessionId } = use(params);
   const exam = EXAM_DATA[examId];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [session, setSession] = useState<any>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -130,6 +132,7 @@ export default function MockTestInterfacePage({
         });
         setShowExplanation(true);
         // Update session stats
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setSession((prev: any) => ({
           ...prev,
           totalQuestions: data.stats.totalQuestions,

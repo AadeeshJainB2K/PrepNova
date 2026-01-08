@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+
 
 const techStack = [
   { name: "Next.js", icon: "nextjs", color: true },
@@ -14,17 +14,7 @@ const techStack = [
   { name: "Docker", icon: "docker", color: true },
 ];
 
-function floatSlow(delay = 0) {
-  return {
-    y: [0, -10, 0],
-    transition: {
-      duration: 8,
-      delay,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  };
-}
+
 
 export function TechParticleSection() {
   return (

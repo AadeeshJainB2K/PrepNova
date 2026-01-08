@@ -100,7 +100,7 @@ export default async function SellerProfilePage({
               No products yet
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              This seller hasn't listed any products yet
+              This seller hasn&apos;t listed any products yet
             </p>
           </div>
         ) : (

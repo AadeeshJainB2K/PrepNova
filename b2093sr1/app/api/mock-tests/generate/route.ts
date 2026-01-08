@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
           aiModel = sessionDetails.aiModel;
           console.log("✅ Using model from session:", aiModel);
         }
-      } catch (error) {
+      } catch {
         console.warn("Could not fetch session details, using default model");
       }
     }
@@ -68,10 +68,11 @@ export async function POST(request: NextRequest) {
         difficulty: savedQuestion.difficulty,
       },
     });
-  } catch (error: any) {
-    console.error("❌ Error in generate API:", error.message);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Failed to generate question";
+    console.error("❌ Error in generate API:", errorMessage);
     return NextResponse.json(
-      { error: error.message || "Failed to generate question" },
+      { error: errorMessage },
       { status: 500 }
     );
   }

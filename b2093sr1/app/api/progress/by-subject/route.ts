@@ -1,10 +1,24 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { userProgress, mockQuestions } from "@/lib/db/schema";
 import { eq, sql } from "drizzle-orm";
 
-export async function GET(request: NextRequest) {
+interface TopicData {
+  topic: string;
+  totalQuestions: number;
+  correctAnswers: number;
+  accuracy: number;
+}
+
+interface SubjectData {
+  subject: string;
+  topics: TopicData[];
+  totalQuestions: number;
+  totalCorrect: number;
+}
+
+export async function GET() {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -28,7 +42,7 @@ export async function GET(request: NextRequest) {
       .orderBy(mockQuestions.subject, mockQuestions.topic);
 
     // Group by subject
-    const subjectMap = new Map<string, any>();
+    const subjectMap = new Map<string, SubjectData>();
 
     subjectTopicStats.forEach((stat) => {
       if (!subjectMap.has(stat.subject)) {
@@ -40,7 +54,7 @@ export async function GET(request: NextRequest) {
         });
       }
 
-      const subjectData = subjectMap.get(stat.subject);
+      const subjectData = subjectMap.get(stat.subject)!;
       subjectData.topics.push({
         topic: stat.topic,
         totalQuestions: stat.totalQuestions,

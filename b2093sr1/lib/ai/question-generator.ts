@@ -22,6 +22,7 @@ export interface GeneratedQuestion {
 }
 
 // Exam contexts
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const EXAM_CONTEXTS: Record<string, any> = {
   "jee-mains": {
     name: "JEE Mains",
@@ -169,16 +170,17 @@ Generate the question now in JSON format:`;
       difficulty,
       explanation: parsed.explanation || "No explanation provided",
     };
-  } catch (error: any) {
-    console.error("❌ Error generating question:", error.message);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error("❌ Error generating question:", errorMessage);
     
     // Provide helpful error messages
-    if (error.message?.includes("quota")) {
+    if (errorMessage.includes("quota")) {
       throw new Error("Gemini API quota exceeded. Please use a local Ollama model instead.");
-    } else if (error.message?.includes("Ollama")) {
-      throw new Error(error.message);
+    } else if (errorMessage.includes("Ollama")) {
+      throw new Error(errorMessage);
     } else {
-      throw new Error(`Failed to generate question: ${error.message}`);
+      throw new Error(`Failed to generate question: ${errorMessage}`);
     }
   }
 }

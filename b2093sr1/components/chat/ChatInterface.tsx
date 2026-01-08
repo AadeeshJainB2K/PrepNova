@@ -32,14 +32,12 @@ interface Message {
 interface ChatInterfaceProps {
   conversationId: string;
   initialMessages?: Message[];
-  userId: string;
   userImage?: string;
 }
 
 export function ChatInterface({
   conversationId,
   initialMessages = [],
-  userId,
   userImage,
 }: ChatInterfaceProps) {
   const router = useRouter();

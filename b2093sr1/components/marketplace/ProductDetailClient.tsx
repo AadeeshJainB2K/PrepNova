@@ -82,6 +82,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               {product.description}
             </p>
             {/* Seller Info */}
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {(product as any).seller && (
               <div className="flex items-center gap-2 text-sm mt-3">
                 <span className="text-gray-600 dark:text-gray-400">Sold by:</span>

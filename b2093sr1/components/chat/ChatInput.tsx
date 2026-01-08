@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, ChangeEvent, useEffect } from "react";
-import { Send, Paperclip, X, Loader2, ChevronDown, Sparkles, Cpu } from "lucide-react";
+import { Send, Paperclip, Loader2, ChevronDown, Sparkles, Cpu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Brain, Clock, Trophy, TrendingUp, Calendar, ArrowRight } from "lucide-react";
+import { Brain, Clock, Trophy, TrendingUp, Calendar } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 interface RecentSession {

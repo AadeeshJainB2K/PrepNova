@@ -6,8 +6,17 @@ import { createOrder } from "@/lib/marketplace/actions";
 import { Button } from "@/components/ui/button";
 import { CreditCard } from "lucide-react";
 
+interface CartItem {
+  id: string;
+  quantity: number;
+  product: {
+    name: string;
+    price: string;
+  };
+}
+
 interface CheckoutFormProps {
-  cartItems: any[];
+  cartItems: CartItem[];
   total: number;
   userName?: string;
 }

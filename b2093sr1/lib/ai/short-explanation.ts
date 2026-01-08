@@ -10,8 +10,7 @@ export async function generateExplanation(
   question: string,
   options: string[],
   correctAnswer: string,
-  userAnswer: string,
-  subject: string
+  userAnswer: string
 ): Promise<string> {
   const isCorrect = userAnswer === correctAnswer;
   

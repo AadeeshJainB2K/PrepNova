@@ -52,6 +52,7 @@ export default async function AdminUsersPage({
 
       {/* Users Table */}
       {result.success ? (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         <UserTable users={result.users as any} />
       ) : (
         <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">

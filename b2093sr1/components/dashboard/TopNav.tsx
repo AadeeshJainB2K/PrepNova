@@ -4,7 +4,7 @@ import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Home, LogOut, ShoppingBag, Package, ShoppingCart } from "lucide-react";
+import { Home, LogOut } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -17,7 +17,7 @@ interface TopNavProps {
   cartCount?: number;
 }
 
-export function TopNav({ user, cartCount = 0 }: TopNavProps) {
+export function TopNav({ user }: TopNavProps) {
   const initials = user.name
     ?.split(" ")
     .map((n) => n[0])

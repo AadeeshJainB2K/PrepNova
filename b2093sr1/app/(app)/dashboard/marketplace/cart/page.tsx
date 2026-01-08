@@ -92,6 +92,7 @@ export default function CartPage() {
             {cartItems.map((item) => (
               <CartItem
                 key={item.id}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 item={item as any}
                 onQuantityChange={handleQuantityChange}
                 onRemove={handleItemRemove}

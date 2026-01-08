@@ -36,6 +36,7 @@ export class OllamaProvider {
       ];
 
       // Add user message with optional images
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const userMessage: any = {
         role: 'user',
         content: prompt,

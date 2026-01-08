@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { generateExplanation } from "@/lib/ai/question-generator";
 import { saveUserProgress, updateSessionProgress, getSessionDetails } from "@/lib/db/mock-tests";
 import { db } from "@/lib/db";
 import { mockQuestions } from "@/lib/db/schema";
@@ -66,7 +65,6 @@ export async function POST(request: NextRequest) {
     );
 
     // Use pre-generated explanation for instant response
-    const options = JSON.parse(question.options);
     let detailedExplanation = question.baseExplanation || question.explanation;
     
     // Optionally customize based on user's answer

@@ -278,24 +278,8 @@ Remember: ALWAYS use the complete Product ID exactly as provided - never abbrevi
                 try {
                   console.log("Starting background title generation for:", conversationId);
                   
-                  const systemPrompt = `You are a helpful AI assistant for our platform with an integrated marketplace.
-
-Your responsibilities:
-1. Answer user questions helpfully and accurately
-2. When users ask about products (like "what is an iPad", "tell me about servers", etc.), inform them about availability in our marketplace
-3. If products are available, mention them naturally with pricing and provide direct links
-4. Be conversational and friendly
-5. Help users navigate the platform
-
-${productContext}
-
-When mentioning products:
-- Include the product name, price, and stock status
-- Provide a direct link in markdown format: [Product Name](/dashboard/marketplace/PRODUCT_ID)
-- Be natural - only mention products when relevant to the conversation
-- If user asks about a product and we have it, enthusiastically let them know!
-
-Remember: You have access to our marketplace inventory. Use it to help users discover what they need!`;
+                  // System prompt for title generation (inline)
+                  // Note: This is a simplified version for title generation only
 
               const titleMessages = [
                 {

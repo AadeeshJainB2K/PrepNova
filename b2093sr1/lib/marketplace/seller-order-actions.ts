@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { orders, orderItems, products, users } from "@/lib/db/schema";
-import { eq, and, inArray } from "drizzle-orm";
+import { orders, users } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 
 // Get orders for a specific seller (orders containing their products)
@@ -39,9 +39,11 @@ export async function getSellerOrders() {
 
     // If admin, return all orders with all products
     if (isAdmin) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return allOrders.map((order: any) => ({
         ...order,
         sellerTotal: order.orderItems.reduce(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (sum: number, item: any) => sum + parseFloat(item.price) * item.quantity,
           0
         ),
@@ -51,9 +53,11 @@ export async function getSellerOrders() {
 
     // For sellers, filter to show only orders containing their products
     const sellerOrders = allOrders
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((order: any) => {
         // Filter items to only include seller's products
         const sellerItems = order.orderItems.filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (item: any) => item.product?.seller?.id === session.user!.id
         );
 
@@ -61,6 +65,7 @@ export async function getSellerOrders() {
 
         // Calculate total for seller's items only
         const sellerTotal = sellerItems.reduce(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (sum: number, item: any) => sum + parseFloat(item.price) * item.quantity,
           0
         );
@@ -72,6 +77,7 @@ export async function getSellerOrders() {
           isAdminView: false,
         };
       })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .filter((order: any) => order !== null);
 
     return sellerOrders;

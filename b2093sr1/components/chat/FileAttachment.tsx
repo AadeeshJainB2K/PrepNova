@@ -1,6 +1,6 @@
 "use client";
 
-import { FileIcon, ImageIcon, Download, X } from "lucide-react";
+import { FileIcon, Download, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 

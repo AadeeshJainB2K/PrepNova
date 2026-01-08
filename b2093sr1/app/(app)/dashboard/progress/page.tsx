@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingUp, Target, Award, Calendar, BookOpen, Brain, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import Link from "next/link";
+import { TrendingUp, Target, Calendar, BookOpen, Brain, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 
 interface OverviewStats {
   totalQuestions: number;
@@ -113,7 +114,7 @@ export default function ProgressPage() {
         <div className="rounded-lg bg-gradient-to-r from-green-600 to-teal-600 p-8 text-white shadow-lg">
           <h1 className="text-4xl font-bold">My Progress</h1>
           <p className="mt-2 text-green-100">
-            Track your performance and see how you're improving
+            Track your performance and see how you&apos;re improving
           </p>
         </div>
         
@@ -125,12 +126,12 @@ export default function ProgressPage() {
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             Start taking mock tests to see your progress and analytics here!
           </p>
-          <a
+          <Link
             href="/dashboard/mock-tests"
             className="inline-block rounded-lg bg-purple-600 px-6 py-3 text-white hover:bg-purple-700 transition-colors"
           >
             Take Your First Mock Test
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -142,7 +143,7 @@ export default function ProgressPage() {
       <div className="rounded-lg bg-gradient-to-r from-green-600 to-teal-600 p-8 text-white shadow-lg">
         <h1 className="text-4xl font-bold">My Progress</h1>
         <p className="mt-2 text-green-100">
-          Track your performance and see how you're improving
+          Track your performance and see how you&apos;re improving
         </p>
       </div>
 

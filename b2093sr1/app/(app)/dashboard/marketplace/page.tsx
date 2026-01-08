@@ -1,4 +1,4 @@
-import { getProducts, getCart } from "@/lib/marketplace/actions";
+import { getProducts } from "@/lib/marketplace/actions";
 import { ProductCard } from "@/components/marketplace/ProductCard";
 import { ShoppingBag, Search, Package, ShoppingCart } from "lucide-react";
 import Link from "next/link";

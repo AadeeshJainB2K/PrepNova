@@ -188,10 +188,10 @@ export default function ExamsPage() {
       {/* Call to Action */}
       <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-          Don't see your exam?
+          Don&apos;t see your exam?
         </h3>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          We're constantly adding new exams. Contact us to request a specific exam to be added to the platform.
+          We&apos;re constantly adding new exams. Contact us to request a specific exam to be added to the platform.
         </p>
         <button className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors">
           Request Exam

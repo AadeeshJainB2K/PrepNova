@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Sparkles, Target, TrendingUp, AlertCircle, CheckCircle, Brain, Loader2, Calculator } from "lucide-react";
 
 interface SubjectAnalysis {
@@ -169,12 +170,12 @@ export default function PredictorPage() {
               </h3>
               <p className="text-sm text-red-700 dark:text-red-300 mt-1">{error}</p>
               {error.includes("10 questions") && (
-                <a
+                <Link
                   href="/dashboard/mock-tests"
                   className="mt-3 inline-block rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700 transition-colors"
                 >
                   Take Mock Tests
-                </a>
+                </Link>
               )}
             </div>
           </div>
@@ -234,7 +235,7 @@ export default function PredictorPage() {
                     <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <h4 className="font-semibold text-gray-900 dark:text-gray-100">
-                        Great! You're on track!
+                        Great! You&apos;re on track!
                       </h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                         Your current performance meets the requirements for your target rank. Keep it up!
@@ -349,12 +350,12 @@ export default function PredictorPage() {
             <p className="mt-2 text-gray-600 dark:text-gray-400">
               Start practicing with AI-generated mock tests tailored to your weak areas.
             </p>
-            <a
+            <Link
               href="/dashboard/mock-tests"
               className="mt-4 inline-block rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 px-6 py-3 text-white font-medium hover:from-violet-700 hover:to-fuchsia-700 transition-all"
             >
               Start Targeted Practice
-            </a>
+            </Link>
           </div>
         </>
       )}

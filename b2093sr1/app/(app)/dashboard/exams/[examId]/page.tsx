@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, Users, TrendingUp, BookOpen, Brain, Sparkles, Clock } from "lucide-react";
 
 // Sample exam data - will be replaced with database queries
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const EXAM_DATA: Record<string, any> = {
   "jee-mains": {
     id: "jee-mains",
@@ -461,7 +462,7 @@ export default function ExamDetailPage({ params }: { params: Promise<{ examId: s
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Exam Not Found</h2>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">The exam you're looking for doesn't exist.</p>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">The exam you&apos;re looking for doesn&apos;t exist.</p>
           <Link
             href="/dashboard/exams"
             className="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
@@ -567,6 +568,7 @@ export default function ExamDetailPage({ params }: { params: Promise<{ examId: s
           Important Dates
         </h2>
         <div className="mt-6 space-y-4">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {exam.timeline.map((event: any, index: number) => (
             <div key={index} className="flex items-center gap-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
               <div className="flex-shrink-0">
@@ -593,6 +595,7 @@ export default function ExamDetailPage({ params }: { params: Promise<{ examId: s
           Syllabus
         </h2>
         <div className="mt-6 grid gap-6 md:grid-cols-3">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {exam.syllabus.map((subject: any, index: number) => (
             <div key={index} className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
               <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-3">

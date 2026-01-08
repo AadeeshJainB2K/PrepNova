@@ -171,7 +171,7 @@ export default function StudyGroupsPage() {
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-gray-100">Peer Support</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Learn from others' experiences and strategies
+                Learn from others&apos; experiences and strategies
               </p>
             </div>
           </div>
