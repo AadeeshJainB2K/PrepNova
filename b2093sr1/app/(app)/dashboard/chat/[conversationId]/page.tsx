@@ -30,7 +30,6 @@ export default async function ConversationPage({ params }: ChatPageProps) {
     <ChatInterface
       key={conversationId}
       conversationId={conversationId}
-      userId={session.user.id}
       userImage={session.user.image || undefined}
       initialMessages={formattedMessages}
     />
