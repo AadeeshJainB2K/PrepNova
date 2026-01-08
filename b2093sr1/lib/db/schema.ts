@@ -377,6 +377,7 @@ export const mockQuestions = pgTable("mock_questions", {
   options: text("options").notNull(), // JSON array of options
   correctAnswer: text("correct_answer").notNull(),
   explanation: text("explanation").notNull(),
+  baseExplanation: text("base_explanation"), // Pre-generated explanation for performance
   difficulty: text("difficulty").notNull(), // Easy, Medium, Hard
   questionType: text("question_type").notNull(), // MCQ, Numerical, etc.
   isAIGenerated: boolean("is_ai_generated").default(false).notNull(),
@@ -422,6 +423,7 @@ export const userProgress = pgTable("user_progress", {
   userAnswer: text("user_answer").notNull(),
   isCorrect: boolean("is_correct").notNull(),
   timeSpent: integer("time_spent"), // Time in seconds
+  sessionId: text("session_id").references(() => mockTestSessions.id, { onDelete: "cascade" }),
   attemptedAt: timestamp("attempted_at", { mode: "date" }).defaultNow().notNull(),
 });
 
@@ -437,6 +439,7 @@ export const mockTestSessions = pgTable("mock_test_sessions", {
     .notNull()
     .references(() => exams.id, { onDelete: "cascade" }),
   difficulty: text("difficulty").notNull(),
+  aiModel: text("ai_model").default("gemini-2.5-flash"),
   totalQuestions: integer("total_questions").notNull(),
   correctAnswers: integer("correct_answers").default(0).notNull(),
   score: decimal("score", { precision: 5, scale: 2 }),

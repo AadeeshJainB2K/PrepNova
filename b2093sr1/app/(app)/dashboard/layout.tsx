@@ -36,7 +36,7 @@ export default async function DashboardLayout({
       <AppSidebar user={user} />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopNav user={user} cartCount={cartCount} />
-        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6">
+        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6" data-user-name={user.name || ''}>
           {children}
         </main>
       </div>

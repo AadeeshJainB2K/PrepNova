@@ -1,0 +1,308 @@
+"use client";
+
+import { use, useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Brain, Zap, Target, Sparkles, Cpu, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { ModelInfo } from "@/app/api/models/route";
+
+// Exam data (same as in exam detail page)
+const EXAM_DATA: Record<string, any> = {
+  "jee-mains": { name: "JEE Mains", fullName: "Joint Entrance Examination - Main" },
+  "neet": { name: "NEET", fullName: "National Eligibility cum Entrance Test" },
+  "clat": { name: "CLAT", fullName: "Common Law Admission Test" },
+  "cat": { name: "CAT", fullName: "Common Admission Test" },
+  "gate": { name: "GATE", fullName: "Graduate Aptitude Test in Engineering" },
+  "upsc-cse": { name: "UPSC CSE", fullName: "Civil Services Examination" },
+};
+
+export default function MockTestConfigPage({ params }: { params: Promise<{ examId: string }> }) {
+  const { examId } = use(params);
+  const router = useRouter();
+  const exam = EXAM_DATA[examId];
+
+  const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">("Medium");
+  const [models, setModels] = useState<ModelInfo[]>([]);
+  const [selectedModel, setSelectedModel] = useState<ModelInfo | null>(null);
+  const [showModelDropdown, setShowModelDropdown] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+
+  // Fetch available models (same as chat)
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const response = await fetch('/api/models');
+        if (response.ok) {
+          const data = await response.json();
+          const availableModels = data.models.filter((m: ModelInfo) => m.available);
+          setModels(availableModels);
+          // Set default model (first available)
+          const defaultModel = availableModels[0];
+          if (defaultModel) setSelectedModel(defaultModel);
+        }
+      } catch (error) {
+        console.error('Failed to fetch models:', error);
+      }
+    };
+    fetchModels();
+  }, []);
+
+  if (!exam) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Exam Not Found</h2>
+          <Link
+            href="/dashboard/exams"
+            className="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          >
+            Back to Exams
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const handleStartTest = async () => {
+    setIsCreating(true);
+    try {
+      // Create session with selected model
+      const response = await fetch("/api/mock-tests/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          examId,
+          difficulty,
+          model: selectedModel?.id || "gemini-2.5-flash",
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        // Redirect to test interface
+        router.push(`/dashboard/mock-tests/${examId}/mock/${data.session.id}`);
+      } else {
+        alert("Failed to create test session");
+        setIsCreating(false);
+      }
+    } catch (error) {
+      console.error("Error creating session:", error);
+      alert("Failed to create test session");
+      setIsCreating(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Back Button */}
+      <Link
+        href={`/dashboard/exams/${examId}`}
+        className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to {exam.name}
+      </Link>
+
+      {/* Header */}
+      <div className="rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 p-8 text-white shadow-lg">
+        <div className="flex items-center gap-3 mb-4">
+          <Brain className="h-12 w-12" />
+          <div>
+            <h1 className="text-4xl font-bold">Infinite Mock Test</h1>
+            <p className="text-xl text-purple-100 mt-1">{exam.fullName}</p>
+          </div>
+        </div>
+        <p className="mt-4 text-purple-100 max-w-3xl">
+          Practice with unlimited AI-generated questions that never run out. Each question is unique and tailored to your exam pattern.
+        </p>
+      </div>
+
+      {/* Features */}
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+          <Zap className="h-8 w-8 text-yellow-600 mb-3" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">AI-Generated</h3>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Every question is uniquely generated by AI based on exam patterns
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+          <Brain className="h-8 w-8 text-purple-600 mb-3" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Instant Explanations</h3>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Get detailed step-by-step solutions immediately after each answer
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+          <Target className="h-8 w-8 text-green-600 mb-3" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Adaptive Difficulty</h3>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Choose your difficulty level and practice at your own pace
+          </p>
+        </div>
+      </div>
+
+      {/* Configuration */}
+      <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-sm">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Configure Your Test</h2>
+
+        <div className="space-y-6">
+          {/* AI Model Selection - Exactly like chat */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              Select AI Model
+            </label>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowModelDropdown(!showModelDropdown)}
+                className="w-full flex items-center justify-between gap-2 px-4 py-3 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-300 dark:hover:border-purple-700 transition-colors bg-white dark:bg-gray-800"
+              >
+                <div className="flex items-center gap-2">
+                  {selectedModel?.provider === 'gemini' ? (
+                    <Sparkles className="h-4 w-4 text-purple-500" />
+                  ) : (
+                    <Cpu className="h-4 w-4 text-green-500" />
+                  )}
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                    {selectedModel?.name || 'Select Model'}
+                  </span>
+                </div>
+                <ChevronDown className={cn(
+                  "h-4 w-4 transition-transform text-gray-500",
+                  showModelDropdown && "rotate-180"
+                )} />
+              </button>
+
+              {/* Dropdown Menu - Exactly like chat */}
+              {showModelDropdown && (
+                <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+                  <div className="p-2">
+                    {models.length === 0 ? (
+                      <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Loading models...</div>
+                    ) : (
+                      <>
+                        {/* Gemini Models */}
+                        {models.filter(m => m.provider === 'gemini').length > 0 && (
+                          <div className="mb-2">
+                            <div className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Cloud Models</div>
+                            {models.filter(m => m.provider === 'gemini').map((model) => (
+                              <button
+                                key={model.id}
+                                onClick={() => {
+                                  setSelectedModel(model);
+                                  setShowModelDropdown(false);
+                                }}
+                                className={cn(
+                                  "w-full flex items-start gap-2 px-3 py-2 text-left rounded-md transition-colors",
+                                  selectedModel?.id === model.id
+                                    ? "bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300"
+                                    : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                                )}
+                              >
+                                <Sparkles className="h-4 w-4 mt-0.5 text-purple-500 flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-sm font-medium truncate">{model.name}</div>
+                                  <div className="text-xs text-gray-500 truncate">{model.description}</div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Ollama Models */}
+                        {models.filter(m => m.provider === 'ollama').length > 0 && (
+                          <div>
+                            <div className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Local Models</div>
+                            {models.filter(m => m.provider === 'ollama').map((model) => (
+                              <button
+                                key={model.id}
+                                onClick={() => {
+                                  setSelectedModel(model);
+                                  setShowModelDropdown(false);
+                                }}
+                                className={cn(
+                                  "w-full flex items-start gap-2 px-3 py-2 text-left rounded-md transition-colors",
+                                  selectedModel?.id === model.id
+                                    ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"
+                                    : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                                )}
+                              >
+                                <Cpu className="h-4 w-4 mt-0.5 text-green-500 flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-sm font-medium truncate">{model.name}</div>
+                                  <div className="text-xs text-gray-500 truncate">{model.description}</div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              💡 Cloud models are faster. Local models require Ollama running.
+            </p>
+          </div>
+
+          {/* Difficulty Selection */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              Select Difficulty Level
+            </label>
+            <div className="grid grid-cols-3 gap-4">
+              {(["Easy", "Medium", "Hard"] as const).map((level) => (
+                <button
+                  key={level}
+                  onClick={() => setDifficulty(level)}
+                  className={`p-4 rounded-lg border-2 transition-all ${
+                    difficulty === level
+                      ? "border-purple-600 bg-purple-50 dark:bg-purple-900/20"
+                      : "border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700"
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">
+                      {level === "Easy" ? "🟢" : level === "Medium" ? "🟡" : "🔴"}
+                    </div>
+                    <div className={`font-semibold ${
+                      difficulty === level
+                        ? "text-purple-700 dark:text-purple-300"
+                        : "text-gray-900 dark:text-gray-100"
+                    }`}>
+                      {level}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      {level === "Easy" && "Basic concepts"}
+                      {level === "Medium" && "Moderate complexity"}
+                      {level === "Hard" && "Advanced problems"}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Start Button */}
+          <button
+            onClick={handleStartTest}
+            disabled={isCreating}
+            className="w-full rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 text-lg font-semibold text-white hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isCreating ? "Creating Test..." : "Start Infinite Mock Test →"}
+          </button>
+
+          <p className="text-sm text-center text-gray-600 dark:text-gray-400">
+            ✨ Unlimited questions • Instant feedback • AI-powered explanations
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

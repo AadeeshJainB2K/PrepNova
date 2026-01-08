@@ -1,0 +1,2 @@
+ALTER TABLE "user_progress" ADD COLUMN "session_id" text;--> statement-breakpoint
+ALTER TABLE "user_progress" ADD CONSTRAINT "user_progress_session_id_mock_test_sessions_id_fk" FOREIGN KEY ("session_id") REFERENCES "public"."mock_test_sessions"("id") ON DELETE cascade ON UPDATE no action;

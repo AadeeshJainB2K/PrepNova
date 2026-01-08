@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HackBoiler - Hackathon Boilerplate",
-  description: "Production-ready boilerplate with Next.js 15, Auth.js, 3D visuals, and AI scaffolding",
+  title: "PrepNova - AI-Powered Exam Preparation Platform",
+  description: "Master your competitive exams with AI-powered mock tests, personalized analytics, and smart rank prediction for JEE, NEET, CLAT, and more",
 };
 
 export default function RootLayout({

@@ -527,7 +527,7 @@ export default function ExamDetailPage({ params }: { params: Promise<{ examId: s
       {/* Quick Actions */}
       <div className="grid gap-4 md:grid-cols-3">
         <Link
-          href={`/dashboard/exams/${examId}/mock`}
+          href={`/dashboard/mock-tests/${examId}/mock`}
           className="group rounded-lg border-2 border-blue-200 dark:border-blue-800 bg-white dark:bg-gray-800 p-6 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-lg transition-all"
         >
           <Brain className="h-8 w-8 text-blue-600 mb-3" />
