@@ -15,6 +15,13 @@
       "when": 1767614142072,
       "tag": "0001_glossy_thena",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1767847667808,
+      "tag": "0002_chief_starhawk",
+      "breakpoints": true
     }
   ]
 }

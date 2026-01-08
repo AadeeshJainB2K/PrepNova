@@ -2,6 +2,8 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import Link from "next/link";
+import { BookOpen, Brain, TrendingUp, Users, Calendar, Target } from "lucide-react";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -19,55 +21,62 @@ export default async function DashboardPage() {
       <div className="rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white shadow-lg">
         <h2 className="text-3xl font-bold">Welcome back, {session?.user?.name}! 👋</h2>
         <p className="mt-2 text-blue-100">
-          Your hackathon boilerplate is ready. Start building your next big idea!
+          Ready to ace your exams? Let's continue your preparation journey!
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-4">
         <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Credits</p>
-              <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">{userData?.credits || 0}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Exams Registered</p>
+              <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">3</p>
             </div>
             <div className="rounded-full bg-blue-100 dark:bg-blue-900/30 p-3">
-              <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <BookOpen className="h-6 w-6 text-blue-600" />
             </div>
           </div>
-          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">Available for AI features</p>
+          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">JEE, NEET, CLAT</p>
         </div>
 
         <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Files</p>
-              <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">0</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Questions Solved</p>
+              <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">1,247</p>
             </div>
             <div className="rounded-full bg-purple-100 dark:bg-purple-900/30 p-3">
-              <svg className="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
+              <Brain className="h-6 w-6 text-purple-600" />
             </div>
           </div>
-          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">Ready for RAG</p>
+          <p className="mt-4 text-sm text-green-600">+23 this week</p>
         </div>
 
         <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">AI Ready</p>
-              <p className="mt-2 text-3xl font-bold text-green-600">✓</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Accuracy</p>
+              <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">87%</p>
             </div>
             <div className="rounded-full bg-green-100 dark:bg-green-900/30 p-3">
-              <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <Target className="h-6 w-6 text-green-600" />
             </div>
           </div>
-          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">pgvector enabled</p>
+          <p className="mt-4 text-sm text-green-600">+5% improvement</p>
+        </div>
+
+        <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Study Streak</p>
+              <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">14🔥</p>
+            </div>
+            <div className="rounded-full bg-orange-100 dark:bg-orange-900/30 p-3">
+              <Calendar className="h-6 w-6 text-orange-600" />
+            </div>
+          </div>
+          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">Keep it up!</p>
         </div>
       </div>
 
@@ -75,89 +84,91 @@ export default async function DashboardPage() {
       <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Quick Actions</h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <button className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-600 p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700">
+          <Link href="/dashboard/exams" className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-600 p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700">
             <div className="rounded-lg bg-blue-100 dark:bg-blue-900/30 p-2">
-              <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
+              <BookOpen className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <div className="font-medium text-gray-900 dark:text-gray-100">Upload Files</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Add documents for RAG</div>
+              <div className="font-medium text-gray-900 dark:text-gray-100">Browse Exams</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Explore all exams</div>
             </div>
-          </button>
+          </Link>
 
-          <button className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-600 p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700">
+          <Link href="/dashboard/mock-tests" className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-600 p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700">
             <div className="rounded-lg bg-purple-100 dark:bg-purple-900/30 p-2">
-              <svg className="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-              </svg>
+              <Brain className="h-5 w-5 text-purple-600" />
             </div>
             <div>
-              <div className="font-medium text-gray-900 dark:text-gray-100">Start Chat</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">AI-powered conversations</div>
+              <div className="font-medium text-gray-900 dark:text-gray-100">Start Mock Test</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">AI-powered practice</div>
             </div>
-          </button>
+          </Link>
 
-          <button className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-600 p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700">
+          <Link href="/dashboard/progress" className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-600 p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700">
             <div className="rounded-lg bg-green-100 dark:bg-green-900/30 p-2">
-              <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+              <TrendingUp className="h-5 w-5 text-green-600" />
             </div>
             <div>
-              <div className="font-medium text-gray-900 dark:text-gray-100">Settings</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Configure your app</div>
+              <div className="font-medium text-gray-900 dark:text-gray-100">View Progress</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Track performance</div>
             </div>
-          </button>
+          </Link>
 
-          <button className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-600 p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700">
-            <div className="rounded-lg bg-orange-100 dark:bg-orange-900/30 p-2">
-              <svg className="h-5 w-5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
+          <Link href="/dashboard/study-groups" className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-600 p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700">
+            <div className="rounded-lg bg-indigo-100 dark:bg-indigo-900/30 p-2">
+              <Users className="h-5 w-5 text-indigo-600" />
             </div>
             <div>
-              <div className="font-medium text-gray-900 dark:text-gray-100">Documentation</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Learn more</div>
+              <div className="font-medium text-gray-900 dark:text-gray-100">Study Groups</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Connect with peers</div>
             </div>
-          </button>
+          </Link>
         </div>
       </div>
 
-      {/* Tech Stack Info */}
+      {/* Upcoming Exam Dates */}
       <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Your Tech Stack</h3>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="flex items-center gap-2 rounded-lg bg-gray-50 dark:bg-gray-700 p-3">
-            <div className="text-2xl">⚡</div>
-            <div>
-              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Next.js 15</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">App Router</div>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+          <Calendar className="h-5 w-5 text-blue-600" />
+          Upcoming Important Dates
+        </h3>
+        <div className="mt-4 space-y-3">
+          {[
+            { exam: "JEE Mains", event: "Registration Closes", date: "March 15, 2026", daysLeft: 45 },
+            { exam: "NEET", event: "Admit Card Release", date: "April 1, 2026", daysLeft: 62 },
+            { exam: "CLAT", event: "Exam Date", date: "May 10, 2026", daysLeft: 101 },
+          ].map((item, index) => (
+            <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+              <div>
+                <div className="font-medium text-gray-900 dark:text-gray-100">{item.exam} - {item.event}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{item.date}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-semibold text-blue-600">{item.daysLeft} days</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">remaining</div>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2 rounded-lg bg-gray-50 dark:bg-gray-700 p-3">
-            <div className="text-2xl">🔐</div>
-            <div>
-              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">NextAuth v5</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Authentication</div>
+          ))}
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Recent Mock Tests</h3>
+        <div className="mt-4 space-y-3">
+          {[
+            { exam: "JEE Mains - Physics", score: 85, date: "2 days ago" },
+            { exam: "NEET - Biology", score: 92, date: "5 days ago" },
+            { exam: "JEE Mains - Mathematics", score: 78, date: "1 week ago" },
+          ].map((test, index) => (
+            <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+              <div>
+                <div className="font-medium text-gray-900 dark:text-gray-100">{test.exam}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{test.date}</div>
+              </div>
+              <div className="text-2xl font-bold text-green-600">{test.score}%</div>
             </div>
-          </div>
-          <div className="flex items-center gap-2 rounded-lg bg-gray-50 dark:bg-gray-700 p-3">
-            <div className="text-2xl">🗄️</div>
-            <div>
-              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">PostgreSQL</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">+ pgvector</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 rounded-lg bg-gray-50 dark:bg-gray-700 p-3">
-            <div className="text-2xl">🤖</div>
-            <div>
-              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">AI Ready</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Vercel AI SDK</div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
