@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, BookOpen, Brain, TrendingUp, Users, Sparkles, ShoppingBag, MessageSquare, Settings, ChevronLeft, ChevronRight, Shield, Package, ShoppingCart } from "lucide-react";
@@ -108,8 +109,14 @@ export function AppSidebar({ user }: AppSidebarProps) {
       {/* Logo */}
       <div className="flex h-16 items-center border-b border-gray-200 dark:border-gray-700 px-4">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-xl">H</span>
+          <div className="w-8 h-8 flex-shrink-0 relative">
+            <Image
+              src="/logo.png"
+              alt="PrepNova Logo"
+              width={32}
+              height={32}
+              className="object-contain"
+            />
           </div>
           {!collapsed && (
             <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">

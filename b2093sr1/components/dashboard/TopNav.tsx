@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -26,10 +27,21 @@ export function TopNav({ user, cartCount = 0 }: TopNavProps) {
   return (
     <header className="h-16 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
       <div className="flex h-full items-center justify-between px-6">
-        {/* Breadcrumb / Title */}
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Welcome back, {user.name || "User"}!</p>
+        {/* Logo + Breadcrumb / Title */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 relative flex-shrink-0">
+            <Image
+              src="/logo.png"
+              alt="PrepNova Logo"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Welcome back, {user.name || "User"}!</p>
+          </div>
         </div>
 
         {/* User Menu + Theme Toggle */}

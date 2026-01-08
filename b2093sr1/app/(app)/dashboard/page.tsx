@@ -35,6 +35,18 @@ export default function DashboardPage() {
   const fetchDashboardStats = async () => {
     try {
       const response = await fetch("/api/dashboard/stats");
+      
+      if (!response.ok) {
+        console.error("API returned error status:", response.status);
+        return;
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        console.error("API returned non-JSON response");
+        return;
+      }
+
       const data = await response.json();
       
       if (data.success) {
