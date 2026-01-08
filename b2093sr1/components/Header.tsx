@@ -26,7 +26,7 @@ export async function Header() {
             href="/"
             className="text-sm font-medium tracking-wide text-white/90 hover:text-white transition"
           >
-            HackBoiler
+            PrepNova
           </Link>
 
           {/* Right controls */}

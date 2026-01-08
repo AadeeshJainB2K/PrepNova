@@ -1,7 +1,6 @@
 "use server";
 
 import { google } from "@ai-sdk/google";
-import { ollama } from "ollama-ai-provider";
 import { generateText } from "ai";
 
 // ... existing code ...
@@ -35,7 +34,7 @@ Be direct and concise:`;
       model: google("gemini-2.5-flash"),
       prompt,
       temperature: 0.7,
-      maxTokens: 400, // Reduced for shorter responses
+      maxOutputTokens: 400, // Reduced for shorter responses
     });
 
     return text.trim();

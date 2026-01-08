@@ -16,7 +16,7 @@ async function verifyTables() {
     console.log("📊 Existing tables in database:");
     console.log("================================");
     
-    const tables = result.rows as any[];
+    const tables = result as any[];
     tables.forEach((row, index) => {
       console.log(`${index + 1}. ${row.table_name}`);
     });
@@ -55,7 +55,7 @@ async function verifyTables() {
       ORDER BY ordinal_position;
     `);
     
-    (userColumns.rows as any[]).forEach(col => {
+    (userColumns as any[]).forEach(col => {
       console.log(`- ${col.column_name} (${col.data_type})`);
     });
     

@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
 
     const recentTests = recentSessions.map((session) => ({
       exam: examNames[session.examId] || session.examId,
-      score: Math.round(parseFloat(session.score)),
+      score: Math.round(parseFloat(session.score || "0")),
       date: getRelativeTime(new Date(session.startedAt)),
     }));
 
