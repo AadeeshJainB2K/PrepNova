@@ -78,6 +78,378 @@ const EXAM_DATA: Record<string, any> = {
       "Top Private Engineering Colleges",
     ],
   },
+  "neet": {
+    id: "neet",
+    name: "NEET",
+    fullName: "National Eligibility cum Entrance Test",
+    category: "Medical",
+    difficulty: "Hard",
+    totalSeats: 90000,
+    estimatedApplicants: 1800000,
+    description: "NEET is the single entrance examination for admission to MBBS and BDS courses in India, including AIIMS and JIPMER. It is conducted by the National Testing Agency (NTA).",
+    logoUrl: "⚕️",
+    eligibility: {
+      age: "17 years minimum, 25 years maximum (relaxed for reserved categories)",
+      qualification: "10+2 with Physics, Chemistry, Biology/Biotechnology",
+      percentage: "50% in PCB (40% for SC/ST/OBC, 45% for PH)",
+    },
+    examPattern: {
+      mode: "Pen and Paper Based Test (Offline)",
+      duration: "3 hours 20 minutes",
+      sections: ["Physics", "Chemistry", "Biology (Botany & Zoology)"],
+      totalQuestions: 200,
+      totalMarks: 720,
+      marking: "+4 for correct, -1 for incorrect",
+    },
+    syllabus: [
+      {
+        subject: "Physics",
+        topics: ["Mechanics", "Thermodynamics", "Electrodynamics", "Optics", "Modern Physics"],
+      },
+      {
+        subject: "Chemistry",
+        topics: ["Physical Chemistry", "Organic Chemistry", "Inorganic Chemistry"],
+      },
+      {
+        subject: "Botany",
+        topics: ["Plant Physiology", "Genetics", "Ecology", "Reproduction", "Cell Biology"],
+      },
+      {
+        subject: "Zoology",
+        topics: ["Human Physiology", "Evolution", "Animal Kingdom", "Biotechnology", "Ecology"],
+      },
+    ],
+    timeline: [
+      {
+        event: "Registration Opens",
+        date: "February 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Registration Closes",
+        date: "March 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Admit Card Release",
+        date: "April 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Exam Date",
+        date: "May 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Result Declaration",
+        date: "June 2026",
+        status: "upcoming",
+      },
+    ],
+    careerPaths: [
+      "AIIMS - All India Institute of Medical Sciences",
+      "Government Medical Colleges across India",
+      "Private Medical Colleges",
+      "Dental Colleges (BDS)",
+      "MBBS and Medical Research Careers",
+    ],
+  },
+  "clat": {
+    id: "clat",
+    name: "CLAT",
+    fullName: "Common Law Admission Test",
+    category: "Law",
+    difficulty: "Medium",
+    totalSeats: 2500,
+    estimatedApplicants: 60000,
+    description: "CLAT is a centralized national level entrance exam for admission to undergraduate and postgraduate law programs offered by 22 National Law Universities in India.",
+    logoUrl: "⚖️",
+    eligibility: {
+      age: "No upper age limit",
+      qualification: "10+2 from a recognized board (for UG), LLB degree (for PG)",
+      percentage: "45% in 12th (40% for SC/ST)",
+    },
+    examPattern: {
+      mode: "Computer Based Test (CBT)",
+      duration: "2 hours",
+      sections: ["English", "Current Affairs", "Legal Reasoning", "Logical Reasoning", "Quantitative Techniques"],
+      totalQuestions: 120,
+      totalMarks: 120,
+      marking: "+1 for correct, -0.25 for incorrect",
+    },
+    syllabus: [
+      {
+        subject: "English Language",
+        topics: ["Comprehension", "Grammar", "Vocabulary", "Verbal Ability"],
+      },
+      {
+        subject: "Current Affairs & GK",
+        topics: ["National Events", "International Events", "Historical Events", "Static GK"],
+      },
+      {
+        subject: "Legal Reasoning",
+        topics: ["Legal Principles", "Case Studies", "Legal Maxims", "Constitutional Law"],
+      },
+      {
+        subject: "Logical Reasoning",
+        topics: ["Analytical Reasoning", "Critical Reasoning", "Logical Deductions"],
+      },
+      {
+        subject: "Quantitative Techniques",
+        topics: ["Basic Mathematics", "Data Interpretation", "Numerical Ability"],
+      },
+    ],
+    timeline: [
+      {
+        event: "Registration Opens",
+        date: "January 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Registration Closes",
+        date: "April 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Admit Card Release",
+        date: "November 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Exam Date",
+        date: "December 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Result Declaration",
+        date: "December 2026",
+        status: "upcoming",
+      },
+    ],
+    careerPaths: [
+      "National Law Universities (22 NLUs)",
+      "Corporate Law Practice",
+      "Litigation and Court Practice",
+      "Legal Consultancy",
+      "Judicial Services",
+    ],
+  },
+  "cat": {
+    id: "cat",
+    name: "CAT",
+    fullName: "Common Admission Test",
+    category: "Management",
+    difficulty: "Hard",
+    totalSeats: 5000,
+    estimatedApplicants: 250000,
+    description: "CAT is a computer-based test for admission to MBA and other management programs at IIMs and over 1000+ B-schools across India. It is one of the most competitive management entrance exams.",
+    logoUrl: "💼",
+    eligibility: {
+      age: "No age limit",
+      qualification: "Bachelor's degree in any discipline",
+      percentage: "50% in graduation (45% for SC/ST/PWD)",
+    },
+    examPattern: {
+      mode: "Computer Based Test (CBT)",
+      duration: "2 hours (40 minutes per section)",
+      sections: ["Verbal Ability & Reading Comprehension", "Data Interpretation & Logical Reasoning", "Quantitative Ability"],
+      totalQuestions: 66,
+      totalMarks: 198,
+      marking: "+3 for correct, -1 for incorrect",
+    },
+    syllabus: [
+      {
+        subject: "VARC",
+        topics: ["Reading Comprehension", "Para Jumbles", "Para Summary", "Odd One Out", "Vocabulary"],
+      },
+      {
+        subject: "DILR",
+        topics: ["Data Interpretation", "Logical Reasoning", "Tables & Graphs", "Puzzles", "Arrangements"],
+      },
+      {
+        subject: "Quantitative Ability",
+        topics: ["Arithmetic", "Algebra", "Geometry", "Number System", "Modern Math"],
+      },
+    ],
+    timeline: [
+      {
+        event: "Registration Opens",
+        date: "August 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Registration Closes",
+        date: "September 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Admit Card Release",
+        date: "October 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Exam Date",
+        date: "November 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Result Declaration",
+        date: "January 2027",
+        status: "upcoming",
+      },
+    ],
+    careerPaths: [
+      "IIMs - Indian Institutes of Management",
+      "Top B-Schools (FMS, XLRI, SPJIMR, MDI)",
+      "Management Consulting",
+      "Investment Banking & Finance",
+      "Product Management & Strategy Roles",
+    ],
+  },
+  "gate": {
+    id: "gate",
+    name: "GATE",
+    fullName: "Graduate Aptitude Test in Engineering",
+    category: "Engineering",
+    difficulty: "Hard",
+    totalSeats: 50000,
+    estimatedApplicants: 900000,
+    description: "GATE is a national level examination for admission to postgraduate programs (M.Tech/M.E/Ph.D) in engineering and technology, and for recruitment in PSUs.",
+    logoUrl: "🔧",
+    eligibility: {
+      age: "No age limit",
+      qualification: "B.E/B.Tech or equivalent degree in Engineering/Technology",
+      percentage: "No minimum percentage required",
+    },
+    examPattern: {
+      mode: "Computer Based Test (CBT)",
+      duration: "3 hours",
+      sections: ["General Aptitude", "Engineering Mathematics", "Subject-Specific"],
+      totalQuestions: 65,
+      totalMarks: 100,
+      marking: "+1 or +2 for correct, -1/3 or -2/3 for incorrect",
+    },
+    syllabus: [
+      {
+        subject: "General Aptitude",
+        topics: ["Verbal Ability", "Numerical Ability", "Reasoning", "Data Interpretation"],
+      },
+      {
+        subject: "Engineering Mathematics",
+        topics: ["Linear Algebra", "Calculus", "Differential Equations", "Probability", "Statistics"],
+      },
+      {
+        subject: "Core Engineering",
+        topics: ["Subject-specific topics based on chosen stream", "25+ streams available", "Check official syllabus for your stream"],
+      },
+    ],
+    timeline: [
+      {
+        event: "Registration Opens",
+        date: "August 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Registration Closes",
+        date: "September 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Admit Card Release",
+        date: "January 2027",
+        status: "upcoming",
+      },
+      {
+        event: "Exam Date",
+        date: "February 2027",
+        status: "upcoming",
+      },
+      {
+        event: "Result Declaration",
+        date: "March 2027",
+        status: "upcoming",
+      },
+    ],
+    careerPaths: [
+      "M.Tech/M.E in IITs, NITs, IIITs",
+      "PSU Recruitment (ONGC, NTPC, BHEL, GAIL)",
+      "Ph.D Programs in Engineering",
+      "Research & Development Roles",
+      "Higher Studies Abroad",
+    ],
+  },
+  "upsc-cse": {
+    id: "upsc-cse",
+    name: "UPSC CSE",
+    fullName: "Civil Services Examination",
+    category: "Civil Services",
+    difficulty: "Very Hard",
+    totalSeats: 1000,
+    estimatedApplicants: 1000000,
+    description: "UPSC CSE is the most prestigious examination in India for recruitment to various Civil Services including IAS, IPS, IFS, and other Group A and Group B services.",
+    logoUrl: "🏛️",
+    eligibility: {
+      age: "21-32 years (relaxation for reserved categories)",
+      qualification: "Bachelor's degree from a recognized university",
+      percentage: "No minimum percentage required",
+    },
+    examPattern: {
+      mode: "Offline (Prelims & Mains), Interview (Personality Test)",
+      duration: "Prelims: 2 hours each paper, Mains: 3 hours each paper",
+      sections: ["Prelims (2 papers)", "Mains (9 papers)", "Interview"],
+      totalQuestions: "Prelims: 200, Mains: Descriptive",
+      totalMarks: 2025,
+      marking: "Prelims: +2.5 for correct, -0.83 for incorrect; Mains: No negative marking",
+    },
+    syllabus: [
+      {
+        subject: "Prelims",
+        topics: ["General Studies", "Current Affairs", "History", "Geography", "Polity", "Economy", "Environment", "CSAT"],
+      },
+      {
+        subject: "Mains",
+        topics: ["Essay", "General Studies I-IV", "Optional Subject (2 papers)", "Language Papers"],
+      },
+      {
+        subject: "Interview",
+        topics: ["Personality Test", "Current Affairs", "DAF-based questions", "Ethics & Values"],
+      },
+    ],
+    timeline: [
+      {
+        event: "Notification Release",
+        date: "February 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Prelims Exam",
+        date: "May 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Prelims Result",
+        date: "June 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Mains Exam",
+        date: "September 2026",
+        status: "upcoming",
+      },
+      {
+        event: "Final Result",
+        date: "April 2027",
+        status: "upcoming",
+      },
+    ],
+    careerPaths: [
+      "IAS - Indian Administrative Service",
+      "IPS - Indian Police Service",
+      "IFS - Indian Foreign Service",
+      "IRS - Indian Revenue Service",
+      "Other Group A & B Central Services",
+    ],
+  },
 };
 
 export default function ExamDetailPage({ params }: { params: Promise<{ examId: string }> }) {
