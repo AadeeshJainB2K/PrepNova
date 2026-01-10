@@ -76,7 +76,7 @@ export default async function OrderDetailPage({
             {/* All Products */}
             <div className="space-y-3">
               <h3 className="font-medium text-gray-900 dark:text-gray-100">All Products:</h3>
-              {order.orderItems?.map((item: any) => (
+              {order.orderItems?.map((item) => (
                 <div
                   key={item.id}
                   className="flex items-center justify-between py-3 px-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg"

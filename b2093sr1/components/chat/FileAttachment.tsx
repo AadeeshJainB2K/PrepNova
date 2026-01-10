@@ -3,6 +3,7 @@
 import { FileIcon, Download, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import Image from "next/image";
 
 interface MessageAttachment {
   id: string;
@@ -33,15 +34,19 @@ export function FileAttachment({ attachment, onRemove, isPreview = false }: File
     return (
       <>
         <div className="relative group">
-          <img
-            src={attachment.fileUrl}
-            alt={attachment.fileName}
-            className={cn(
-              "rounded-lg max-w-sm cursor-pointer transition-transform hover:scale-[1.02]",
-              isPreview ? "max-h-32" : "max-h-64"
-            )}
-            onClick={() => !isPreview && setShowLightbox(true)}
-          />
+          <div className="relative w-full max-w-sm">
+            <Image
+              src={attachment.fileUrl}
+              alt={attachment.fileName}
+              width={400}
+              height={isPreview ? 128 : 256}
+              className={cn(
+                "rounded-lg cursor-pointer transition-transform hover:scale-[1.02] object-cover",
+                isPreview ? "max-h-32" : "max-h-64"
+              )}
+              onClick={() => !isPreview && setShowLightbox(true)}
+            />
+          </div>
           {onRemove && (
             <button
               onClick={onRemove}
@@ -58,9 +63,11 @@ export function FileAttachment({ attachment, onRemove, isPreview = false }: File
             className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
             onClick={() => setShowLightbox(false)}
           >
-            <img
+            <Image
               src={attachment.fileUrl}
               alt={attachment.fileName}
+              width={1200}
+              height={800}
               className="max-w-full max-h-full object-contain"
             />
             <button

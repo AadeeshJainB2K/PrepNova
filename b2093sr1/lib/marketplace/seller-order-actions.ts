@@ -150,7 +150,7 @@ export async function updateOrderStatus(orderId: string, newStatus: string) {
 
     // Check if seller owns at least one product in this order
     const sellerOwnsProduct = order.orderItems.some(
-      (item: any) => item.product?.seller?.id === session.user!.id
+      (item) => item.product?.seller?.id === session.user!.id
     );
 
     if (!sellerOwnsProduct) {

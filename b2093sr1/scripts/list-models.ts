@@ -1,4 +1,15 @@
-require('dotenv').config({ path: '.env.local' });
+import 'dotenv/config';
+
+interface Model {
+  name: string;
+  displayName?: string;
+  description?: string;
+  supportedGenerationMethods?: string[];
+}
+
+interface ModelsResponse {
+  models?: Model[];
+}
 
 async function listModels() {
   try {
@@ -19,7 +30,7 @@ async function listModels() {
       throw new Error(`HTTP ${response.status}: ${await response.text()}`);
     }
     
-    const data = await response.json();
+    const data = await response.json() as ModelsResponse;
     
     console.log("✅ Available Models:\n");
     console.log("=".repeat(80));
@@ -54,7 +65,7 @@ async function listModels() {
     }
     
   } catch (error) {
-    console.error("❌ Error:", error.message);
+    console.error("❌ Error:", error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }

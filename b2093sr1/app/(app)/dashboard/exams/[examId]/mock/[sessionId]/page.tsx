@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useEffect } from "react";
+import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft, Brain, Trophy, Loader2, CheckCircle, XCircle, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -49,19 +49,7 @@ export default function MockTestInterfacePage({
   } | null>(null);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
 
-  // Load session details
-  useEffect(() => {
-    loadSession();
-  }, [sessionId]);
-
-  // Generate first question
-  useEffect(() => {
-    if (session && !currentQuestion) {
-      generateNewQuestion();
-    }
-  }, [session]);
-
-  const loadSession = async () => {
+  const loadSession = useCallback(async () => {
     try {
       const response = await fetch(`/api/mock-tests/sessions?sessionId=${sessionId}`);
       const data = await response.json();
@@ -71,9 +59,9 @@ export default function MockTestInterfacePage({
     } catch (error) {
       console.error("Error loading session:", error);
     }
-  };
+  }, [sessionId]);
 
-  const generateNewQuestion = async () => {
+  const generateNewQuestion = useCallback(async () => {
     setIsGenerating(true);
     setSelectedAnswer(null);
     setFeedback(null);
@@ -103,7 +91,19 @@ export default function MockTestInterfacePage({
     } finally {
       setIsGenerating(false);
     }
-  };
+  }, [examId, exam.name, session]);
+
+  // Load session details
+  useEffect(() => {
+    loadSession();
+  }, [loadSession]);
+
+  // Generate first question
+  useEffect(() => {
+    if (session && !currentQuestion) {
+      generateNewQuestion();
+    }
+  }, [session, currentQuestion, generateNewQuestion]);
 
   const handleSubmitAnswer = async () => {
     if (!selectedAnswer || !currentQuestion) return;

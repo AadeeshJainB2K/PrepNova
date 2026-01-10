@@ -5,19 +5,70 @@ import { messages, conversations, messageAttachments } from "@/lib/db/schema";
 import { eq, asc } from "drizzle-orm";
 import { auth } from "@/auth";
 import { searchProducts } from "@/lib/marketplace/actions";
+import type { Attachment, ProductMatch, ConversationMessage, GeminiPart } from "@/lib/types/chat";
+import { chatMessageSchema, validateInput } from "@/lib/validation/schemas";
+import { checkRateLimit, getRateLimitIdentifier, RATE_LIMITS } from "@/lib/rate-limit";
+import { AuthenticationError } from "@/lib/errors";
 
 export const maxDuration = 30;
 export const dynamic = 'force-dynamic';
 
+/**
+ * Chat API Route
+ * 
+ * Handles chat message processing with AI providers (Gemini/Ollama)
+ * Includes rate limiting, input validation, and marketplace product search
+ */
 export async function POST(req: Request) {
   console.log("=== Chat API Called ===");
   
   try {
-    const body = await req.json();
-    const { messages: newMessages, conversationId, model, provider, attachments } = body;
     const session = await auth();
+    
+    if (!session?.user?.id) {
+      throw new AuthenticationError();
+    }
 
-    if (!conversationId || !session?.user?.id) {
+    // Rate limiting
+    const rateLimitId = getRateLimitIdentifier(session.user.id, req);
+    const { allowed, resetTime } = checkRateLimit(rateLimitId, RATE_LIMITS.chat);
+    
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({ 
+          error: "Too many requests. Please try again later.",
+          resetTime: new Date(resetTime).toISOString()
+        }),
+        { 
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": resetTime.toString(),
+          }
+        }
+      );
+    }
+
+    const body = await req.json();
+    
+    // Input validation
+    const validation = validateInput(chatMessageSchema, {
+      message: body.messages?.[body.messages.length - 1]?.content,
+      conversationId: body.conversationId,
+      attachments: body.attachments,
+    });
+
+    if (!validation.success) {
+      return new Response(
+        JSON.stringify({ error: validation.error }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const { messages: newMessages, conversationId, model, provider, attachments } = body;
+
+    if (!conversationId) {
       return new Response("Invalid request", { status: 400 });
     }
 
@@ -42,7 +93,7 @@ export async function POST(req: Request) {
     let productContext = "";
     if (productMatches.length > 0) {
       productContext = "\n\nAVAILABLE PRODUCTS IN OUR MARKETPLACE:\n";
-      productMatches.forEach((product: any) => {
+      productMatches.forEach((product: ProductMatch) => {
         productContext += `- ${product.name}: ₹${parseFloat(product.price).toLocaleString()} (${product.stock > 0 ? 'In Stock' : 'Out of Stock'})\n`;
         productContext += `  Description: ${product.description}\n`;
         productContext += `  Product ID: ${product.id}\n`;
@@ -52,14 +103,14 @@ export async function POST(req: Request) {
     }
 
     // Separate attachments by type
-    const imageAttachments = attachments?.filter((a: any) => a.fileType === 'image') || [];
-    const documentAttachments = attachments?.filter((a: any) => a.fileType === 'document') || [];
+    const imageAttachments = attachments?.filter((a: Attachment) => a.fileType === 'image') || [];
+    const documentAttachments = attachments?.filter((a: Attachment) => a.fileType === 'document') || [];
     
     console.log("Image attachments:", imageAttachments.length);
     console.log("Document attachments:", documentAttachments.length);
 
     // Database operations with error handling
-    let conversationHistory: any[] = [];
+    let conversationHistory: ConversationMessage[] = [];
     
     try {
       // Check if conversation exists
@@ -210,11 +261,11 @@ Remember: ALWAYS use the complete Product ID exactly as provided - never abbrevi
             if (imageAttachments.length > 0 || documentAttachments.length > 0) {
               console.log("Using Gemini with attachments:", imageAttachments.length, "images,", documentAttachments.length, "documents");
               
-              const parts: any[] = [{ text: userPrompt }];
+              const parts: GeminiPart[] = [{ text: userPrompt }];
               
               // Add image parts
               if (imageAttachments.length > 0) {
-                const imageParts = imageAttachments.map((img: any) => ({
+                const imageParts = imageAttachments.map((img: Attachment) => ({
                   inlineData: {
                     data: img.fileUrl.split(',')[1], // Remove data:image/jpeg;base64, prefix
                     mimeType: img.mimeType
@@ -225,7 +276,7 @@ Remember: ALWAYS use the complete Product ID exactly as provided - never abbrevi
               
               // Add document parts (PDFs, text files)
               if (documentAttachments.length > 0) {
-                const docParts = documentAttachments.map((doc: any) => ({
+                const docParts = documentAttachments.map((doc: Attachment) => ({
                   inlineData: {
                     data: doc.fileUrl.split(',')[1], // Remove data:application/pdf;base64, prefix
                     mimeType: doc.mimeType
@@ -234,7 +285,7 @@ Remember: ALWAYS use the complete Product ID exactly as provided - never abbrevi
                 parts.push(...docParts);
               }
 
-              const result = await geminiModel.generateContentStream({ contents: [{ role: 'user', parts }] });
+              const result = await geminiModel.generateContentStream({ contents: [{ role: 'user', parts }] } as Parameters<typeof geminiModel.generateContentStream>[0]);
 
               // Stream from Gemini
               for await (const chunk of result.stream) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useEffect } from "react";
+import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft, Brain, Clock, Trophy, CheckCircle, XCircle, Target } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -36,7 +36,12 @@ interface SessionData {
   status: string;
 }
 
-const EXAM_DATA: Record<string, any> = {
+interface ExamData {
+  name: string;
+  fullName: string;
+}
+
+const EXAM_DATA: Record<string, ExamData> = {
   "jee-mains": { name: "JEE Mains", fullName: "Joint Entrance Examination - Main" },
   "neet": { name: "NEET", fullName: "National Eligibility cum Entrance Test" },
   "clat": { name: "CLAT", fullName: "Common Law Admission Test" },
@@ -58,25 +63,24 @@ export default function SessionReviewPage({
   const [loading, setLoading] = useState(true);
   const [expandedQuestion, setExpandedQuestion] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchSessionDetails();
-  }, [sessionId]);
-
-  const fetchSessionDetails = async () => {
+  const fetchSessionDetails = useCallback(async () => {
     try {
-      const response = await fetch(`/api/mock-tests/sessions/${sessionId}`);
+      const response = await fetch(`/api/mock-tests/sessions?sessionId=${sessionId}`);
       const data = await response.json();
-      
       if (data.success) {
         setSession(data.session);
         setQuestions(data.questions);
       }
     } catch (error) {
-      console.error("Error loading session details:", error);
+      console.error("Error fetching session:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [sessionId]);
+
+  useEffect(() => {
+    fetchSessionDetails();
+  }, [fetchSessionDetails]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);

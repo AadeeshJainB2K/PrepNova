@@ -6,6 +6,7 @@ import { ReviewForm } from "@/components/marketplace/ReviewForm";
 import { ReviewList } from "@/components/marketplace/ReviewList";
 import { Star } from "lucide-react";
 import { auth } from "@/auth";
+import type { ProductWithSeller } from "@/lib/types/marketplace";
 
 export default async function ProductDetailPage({
   params,
@@ -26,7 +27,7 @@ export default async function ProductDetailPage({
 
   return (
     <div className="space-y-8">
-      <ProductDetailClient product={product as any} />
+      <ProductDetailClient product={product as unknown as ProductWithSeller} />
 
       {/* Reviews Section */}
       <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
@@ -63,7 +64,7 @@ export default async function ProductDetailPage({
             <ReviewForm productId={productId} />
           </div>
           <div className="lg:col-span-2">
-            <ReviewList reviews={reviews as any} currentUserId={session?.user?.id} />
+            <ReviewList reviews={reviews} currentUserId={session?.user?.id} />
           </div>
         </div>
       </div>

@@ -7,10 +7,10 @@ import Link from "next/link";
 import { ArrowLeft, ShoppingCart, Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { addToCart } from "@/lib/marketplace/actions";
-import type { Product } from "@/lib/marketplace/types";
+import type { ProductWithSeller } from "@/lib/types/marketplace";
 
 interface ProductDetailClientProps {
-  product: Product;
+  product: ProductWithSeller;
 }
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
@@ -81,16 +81,14 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
               {product.description}
             </p>
-            {/* Seller Info */}
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {(product as any).seller && (
+            {product.seller && (
               <div className="flex items-center gap-2 text-sm mt-3">
                 <span className="text-gray-600 dark:text-gray-400">Sold by:</span>
                 <Link 
-                  href={`/dashboard/marketplace/seller/${(product as any).seller.id}`}
+                  href={`/dashboard/marketplace/seller/${product.seller.id}`}
                   className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
                 >
-                  {(product as any).seller.name || (product as any).seller.email}
+                  {product.seller.name || product.seller.email}
                 </Link>
               </div>
             )}

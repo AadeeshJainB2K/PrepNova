@@ -22,7 +22,7 @@ export default async function SellerOrdersPage() {
   }
 
   const orders = await getSellerOrders();
-  const isAdminView = orders.length > 0 && (orders[0] as any).isAdminView;
+  const isAdminView = orders.length > 0 && 'isAdminView' in orders[0] && orders[0].isAdminView;
 
   return <SellerOrdersClient orders={orders} isAdminView={isAdminView} />;
 }

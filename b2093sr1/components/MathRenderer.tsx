@@ -58,6 +58,8 @@ export function MathRenderer({ content, className = "" }: MathRendererProps) {
 
   const renderKatex = (math: string, displayMode: boolean): string => {
     try {
+      // KaTeX must be loaded dynamically on client side
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const katex = require("katex");
       return katex.renderToString(math, {
         displayMode,

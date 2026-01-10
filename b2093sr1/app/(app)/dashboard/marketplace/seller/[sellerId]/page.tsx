@@ -179,7 +179,7 @@ export default async function SellerProfilePage({
 
           {/* Review List */}
           <div className="lg:col-span-2">
-            <SellerReviewList reviews={reviews as any} currentUserId={session?.user?.id} />
+            <SellerReviewList reviews={reviews} currentUserId={session?.user?.id} />
           </div>
         </div>
       </div>

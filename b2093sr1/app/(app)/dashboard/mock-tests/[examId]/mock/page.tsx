@@ -7,8 +7,12 @@ import { ArrowLeft, Brain, Zap, Target, Sparkles, Cpu, ChevronDown } from "lucid
 import { cn } from "@/lib/utils";
 import type { ModelInfo } from "@/app/api/models/route";
 
-// Exam data (same as in exam detail page)
-const EXAM_DATA: Record<string, any> = {
+interface ExamData {
+  name: string;
+  fullName: string;
+}
+
+const EXAM_DATA: Record<string, ExamData> = {
   "jee-mains": { name: "JEE Mains", fullName: "Joint Entrance Examination - Main" },
   "neet": { name: "NEET", fullName: "National Eligibility cum Entrance Test" },
   "clat": { name: "CLAT", fullName: "Common Law Admission Test" },

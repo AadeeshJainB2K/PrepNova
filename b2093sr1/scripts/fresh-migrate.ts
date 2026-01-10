@@ -25,9 +25,9 @@ async function freshMigrate() {
       try {
         await db.execute(sql.raw(statement));
         successCount++;
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Log but continue if table doesn't exist
-        if (!error.message?.includes("does not exist")) {
+        if (!error instanceof Error && error.message.includes("does not exist")) {
           console.error(`⚠️  Statement failed: ${statement.substring(0, 50)}...`);
           console.error(`   Error: ${error.message}`);
         }

@@ -15,7 +15,6 @@ export default async function ChatPage() {
   return (
     <ChatInterface
       conversationId={newConversationId}
-      userId={session.user.id}
       userImage={session.user.image || undefined}
     />
   );

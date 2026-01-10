@@ -35,8 +35,9 @@ async function checkColumn() {
       
       console.log('  mock_test_sessions.ai_model:', result2.length > 0 ? '✅ exists' : '❌ missing');
       
-    } catch (err: any) {
-      console.error(`❌ Error:`, err.message);
+    } catch (err: unknown) {
+      console.error(`❌ Error:`, err instanceof Error ? err.message : String(err));
+      process.exit(1);
     } finally {
       await sql.end();
     }

@@ -49,9 +49,9 @@ async function directMigrate() {
             console.log(`   ✓ Created index: ${match[1]}`);
           }
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Skip if already exists
-        if (error.message?.includes("already exists")) {
+        if (error instanceof Error && error.message.includes("already exists")) {
           skipCount++;
         } else {
           console.error(`⚠️  Error: ${error.message?.substring(0, 100)}`);

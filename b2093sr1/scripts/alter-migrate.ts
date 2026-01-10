@@ -45,14 +45,15 @@ async function alterMigrate() {
             console.log(`   ✓ Created table: ${match[1]}`);
           }
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Skip if column already exists or table already exists
-        if (error.message?.includes("already exists") || 
-            error.message?.includes("does not exist")) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        if (errorMessage?.includes("already exists") || 
+            errorMessage?.includes("does not exist")) {
           skipCount++;
         } else {
           console.error(`⚠️  Statement failed: ${statement.substring(0, 60)}...`);
-          console.error(`   Error: ${error.message}`);
+          console.error(`   Error: ${errorMessage}`);
         }
       }
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useEffect } from "react";
+import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft, Brain, Trophy, Loader2, CheckCircle, XCircle, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -8,7 +8,13 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 
-const EXAM_DATA: Record<string, any> = {
+import type { MockTestSession } from "@/lib/types/mock-test";
+
+interface ExamData {
+  name: string;
+}
+
+const EXAM_DATA: Record<string, ExamData> = {
   "jee-mains": { name: "JEE Mains" },
   "neet": { name: "NEET" },
   "clat": { name: "CLAT" },
@@ -34,7 +40,7 @@ export default function MockTestInterfacePage({
   const { examId, sessionId } = use(params);
   const exam = EXAM_DATA[examId];
 
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<MockTestSession | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [nextQuestion, setNextQuestion] = useState<Question | null>(null); // Pre-loaded next question
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -50,32 +56,8 @@ export default function MockTestInterfacePage({
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<number>(15); // Countdown timer
 
-  // Load session details
-  useEffect(() => {
-    loadSession();
-  }, [sessionId]);
-
-  // Generate first question
-  useEffect(() => {
-    if (session && !currentQuestion && !nextQuestion) {
-      generateNewQuestion();
-    }
-  }, [session]);
-
-  // Auto-advance timer when explanation is shown
-  useEffect(() => {
-    if (showExplanation && autoAdvanceTimer > 0) {
-      const timer = setTimeout(() => {
-        setAutoAdvanceTimer(autoAdvanceTimer - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (showExplanation && autoAdvanceTimer === 0 && nextQuestion) {
-      // Auto-advance to next question
-      advanceToNextQuestion();
-    }
-  }, [showExplanation, autoAdvanceTimer, nextQuestion]);
-
-  const loadSession = async () => {
+  // Define functions before useEffect hooks to avoid hoisting issues
+  const loadSession = useCallback(async () => {
     try {
       const response = await fetch(`/api/mock-tests/sessions?sessionId=${sessionId}`);
       const data = await response.json();
@@ -85,9 +67,9 @@ export default function MockTestInterfacePage({
     } catch (error) {
       console.error("Error loading session:", error);
     }
-  };
+  }, [sessionId]);
 
-  const generateNewQuestion = async () => {
+  const generateNewQuestion = useCallback(async () => {
     setIsGenerating(true);
     setSelectedAnswer(null);
     setFeedback(null);
@@ -101,7 +83,7 @@ export default function MockTestInterfacePage({
         body: JSON.stringify({
           examId,
           examName: exam.name,
-          difficulty: session.difficulty,
+          difficulty: session?.difficulty || "Medium",
           sessionId,
         }),
       });
@@ -118,7 +100,44 @@ export default function MockTestInterfacePage({
     } finally {
       setIsGenerating(false);
     }
-  };
+  }, [examId, exam.name, session, sessionId]);
+
+  const advanceToNextQuestion = useCallback(() => {
+    if (nextQuestion) {
+      setCurrentQuestion(nextQuestion);
+      setNextQuestion(null);
+      setSelectedAnswer(null);
+      setFeedback(null);
+      setShowExplanation(false);
+      setQuestionStartTime(Date.now());
+      setAutoAdvanceTimer(15);
+    }
+  }, [nextQuestion]);
+
+  // Load session details
+  useEffect(() => {
+    loadSession();
+  }, [loadSession]);
+
+  // Generate first question
+  useEffect(() => {
+    if (session && !currentQuestion && !nextQuestion) {
+      generateNewQuestion();
+    }
+  }, [session, currentQuestion, nextQuestion, generateNewQuestion]);
+
+  // Auto-advance timer when explanation is shown
+  useEffect(() => {
+    if (showExplanation && autoAdvanceTimer > 0) {
+      const timer = setTimeout(() => {
+        setAutoAdvanceTimer(autoAdvanceTimer - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (showExplanation && autoAdvanceTimer === 0 && nextQuestion) {
+      // Auto-advance to next question
+      advanceToNextQuestion();
+    }
+  }, [showExplanation, autoAdvanceTimer, nextQuestion, advanceToNextQuestion]);
 
   const handleSubmitAnswer = async () => {
     if (!selectedAnswer || !currentQuestion) return;
@@ -147,12 +166,12 @@ export default function MockTestInterfacePage({
         });
         setShowExplanation(true);
         // Update session stats
-        setSession((prev: any) => ({
+        setSession((prev) => prev ? ({
           ...prev,
           totalQuestions: data.stats.totalQuestions,
           correctAnswers: data.stats.correctAnswers,
           score: data.stats.score,
-        }));
+        }) : null);
         
         // Start generating next question in background
         generateNextQuestionInBackground();
@@ -177,7 +196,7 @@ export default function MockTestInterfacePage({
         body: JSON.stringify({
           examId,
           examName: exam.name,
-          difficulty: session.difficulty,
+          difficulty: session?.difficulty || "Medium",
           sessionId,
         }),
       });
@@ -191,19 +210,6 @@ export default function MockTestInterfacePage({
       console.error("Error pre-loading next question:", error);
     } finally {
       setIsGeneratingNext(false);
-    }
-  };
-
-  // Advance to the pre-loaded next question
-  const advanceToNextQuestion = () => {
-    if (nextQuestion) {
-      setCurrentQuestion(nextQuestion);
-      setNextQuestion(null);
-      setSelectedAnswer(null);
-      setFeedback(null);
-      setShowExplanation(false);
-      setQuestionStartTime(Date.now());
-      setAutoAdvanceTimer(15);
     }
   };
 

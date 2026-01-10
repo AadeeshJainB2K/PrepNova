@@ -34,7 +34,7 @@ async function migrate() {
         await sql.unsafe(statement);
       }
       console.log(`✅ ${database.name} migration completed successfully!`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(`❌ ${database.name} migration failed:`, err.message);
     } finally {
       await sql.end();

@@ -16,7 +16,10 @@ async function verifyTables() {
     console.log("📊 Existing tables in database:");
     console.log("================================");
     
-    const tables = result as any[];
+    interface TableRow {
+      table_name: string;
+    }
+    const tables = result as unknown as TableRow[];
     tables.forEach((row, index) => {
       console.log(`${index + 1}. ${row.table_name}`);
     });
@@ -55,7 +58,11 @@ async function verifyTables() {
       ORDER BY ordinal_position;
     `);
     
-    (userColumns as any[]).forEach(col => {
+    interface ColumnRow {
+      column_name: string;
+      data_type: string;
+    }
+    (userColumns as unknown as ColumnRow[]).forEach(col => {
       console.log(`- ${col.column_name} (${col.data_type})`);
     });
     

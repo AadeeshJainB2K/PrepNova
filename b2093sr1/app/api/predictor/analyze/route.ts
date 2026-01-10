@@ -122,12 +122,12 @@ export async function POST(request: NextRequest) {
       if (q.isCorrect) subjectData.correct++;
     });
 
-    const subjectAnalysis = Array.from(subjectMap.entries()).map(([subject, data]) => {
+    const subjectAnalysis: SubjectAnalysis[] = Array.from(subjectMap.entries()).map(([subject, data]) => {
       const accuracy = (data.correct / data.total) * 100;
       return {
         subject,
         score: Math.round(accuracy),
-        status: accuracy >= 85 ? "excellent" : accuracy >= 70 ? "good" : "needs improvement",
+        status: (accuracy >= 85 ? "excellent" : accuracy >= 70 ? "good" : "needs improvement") as SubjectAnalysis["status"],
       };
     });
 
@@ -152,10 +152,9 @@ export async function POST(request: NextRequest) {
     const improvement = Math.max(0, requiredProbability - currentProbability);
 
     // Generate AI recommendations
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const recommendations = await generateRecommendations(
       EXAM_NAMES[examId] || examId,
-      subjectAnalysis as any,
+      subjectAnalysis,
       overallAccuracy,
       targetRank,
       currentProbability,
