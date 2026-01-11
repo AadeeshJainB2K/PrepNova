@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Brain, TrendingUp, Users, Sparkles, ShoppingBag, MessageSquare, Settings, Shield, Package, ShoppingCart, X } from "lucide-react";
+import { Home, BookOpen, Brain, TrendingUp, Users, Sparkles, Calendar, ShoppingBag, MessageSquare, Settings, Shield, Package, ShoppingCart, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Navigation configuration - easily extensible for future features
@@ -37,6 +37,11 @@ export const navItems = [
     name: "AI Predictor",
     href: "/dashboard/predictor",
     icon: Sparkles,
+  },
+  {
+    name: "Scheduler",
+    href: "/dashboard/scheduler",
+    icon: Calendar,
   },
   {
     name: "Marketplace",
