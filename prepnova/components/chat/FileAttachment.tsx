@@ -34,23 +34,28 @@ export function FileAttachment({ attachment, onRemove, isPreview = false }: File
     return (
       <>
         <div className="relative group">
-          <div className="relative w-full max-w-sm">
+          <div className={cn(
+            "relative overflow-hidden rounded-lg",
+            isPreview ? "max-w-[200px] max-h-32" : "max-w-sm max-h-64"
+          )}>
             <Image
               src={attachment.fileUrl}
               alt={attachment.fileName}
-              width={400}
-              height={isPreview ? 128 : 256}
+              width={0}
+              height={0}
+              sizes="(max-width: 640px) 200px, 384px"
               className={cn(
-                "rounded-lg cursor-pointer transition-transform hover:scale-[1.02] object-cover",
+                "w-auto h-auto max-w-full rounded-lg cursor-pointer transition-transform hover:scale-[1.02]",
                 isPreview ? "max-h-32" : "max-h-64"
               )}
+              style={{ width: 'auto', height: 'auto' }}
               onClick={() => !isPreview && setShowLightbox(true)}
             />
           </div>
           {onRemove && (
             <button
               onClick={onRemove}
-              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
             >
               <X className="h-4 w-4" />
             </button>

@@ -18,12 +18,12 @@ export function MobileMenu({ isOpen, onClose, session }: MobileMenuProps) {
     <>
       {/* Backdrop - z-[100] to be above header (z-50) */}
       <div
-        className="fixed inset-0 bg-black/50 z-[100] lg:hidden"
+        className="fixed inset-0 bg-black/50 z-[100] lg:hidden pointer-events-auto"
         onClick={onClose}
       />
 
       {/* Menu Drawer - z-[110] to be above backdrop */}
-      <div className="fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-900 shadow-xl z-[110] lg:hidden">
+      <div className="fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-900 shadow-xl z-[110] lg:hidden pointer-events-auto">
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">

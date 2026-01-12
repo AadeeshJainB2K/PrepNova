@@ -16,9 +16,10 @@ interface Conversation {
 
 interface ConversationListProps {
   conversations: Conversation[];
+  onSelect?: () => void;
 }
 
-export function ConversationList({ conversations: initialConversations }: ConversationListProps) {
+export function ConversationList({ conversations: initialConversations, onSelect }: ConversationListProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [conversations, setConversations] = useState(initialConversations);
@@ -90,42 +91,46 @@ export function ConversationList({ conversations: initialConversations }: Conver
             const isDeleting = deletingId === conversation.id;
 
             return (
-              <Link
+              <div
                 key={conversation.id}
-                href={`/dashboard/chat/${conversation.id}`}
-                className={`group relative block p-3 rounded-lg transition-all duration-200 ${
+                className={`group relative block rounded-lg transition-all duration-200 ${
                   isActive
                     ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 shadow-sm"
                     : "hover:bg-gray-100 dark:hover:bg-gray-700 border border-transparent"
                 } ${isDeleting ? "opacity-50 pointer-events-none" : ""}`}
               >
-                <div className="flex items-start gap-2">
-                  <Sparkles className={`h-4 w-4 mt-0.5 flex-shrink-0 ${
-                    isActive ? "text-purple-600 dark:text-purple-400" : "text-gray-400 dark:text-gray-500"
-                  }`} />
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium truncate ${
-                      isActive ? "text-gray-900 dark:text-gray-100" : "text-gray-700 dark:text-gray-300"
-                    }`}>
-                      {conversation.summary || conversation.title || "New Chat"}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                      {new Date(conversation.createdAt).toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'short', 
-                        day: 'numeric' 
-                      })}
-                    </p>
+                <Link
+                  href={`/dashboard/chat/${conversation.id}`}
+                  onClick={() => onSelect?.()}
+                  className="block p-3 pr-10">
+                  <div className="flex items-start gap-2">
+                    <Sparkles className={`h-4 w-4 mt-0.5 flex-shrink-0 ${
+                      isActive ? "text-purple-600 dark:text-purple-400" : "text-gray-400 dark:text-gray-500"
+                    }`} />
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-medium truncate ${
+                        isActive ? "text-gray-900 dark:text-gray-100" : "text-gray-700 dark:text-gray-300"
+                      }`}>
+                        {conversation.summary || conversation.title || "New Chat"}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                        {new Date(conversation.createdAt).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'short', 
+                          day: 'numeric' 
+                        })}
+                      </p>
+                    </div>
                   </div>
-                  <button
-                    onClick={(e) => handleDelete(e, conversation.id)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded"
-                    aria-label="Delete conversation"
-                  >
-                    <Trash2 className="h-4 w-4 text-red-600 dark:text-red-400" />
-                  </button>
-                </div>
-              </Link>
+                </Link>
+                <button
+                  onClick={(e) => handleDelete(e, conversation.id)}
+                  className="absolute top-1/2 -translate-y-1/2 right-2 sm:opacity-0 sm:group-hover:opacity-100 opacity-100 transition-opacity p-1.5 hover:bg-red-100 dark:hover:bg-red-900/30 rounded"
+                  aria-label="Delete conversation"
+                >
+                  <Trash2 className="h-4 w-4 text-red-600 dark:text-red-400" />
+                </button>
+              </div>
             );
           })
         )}
