@@ -69,7 +69,7 @@ export default function SessionReviewPage({
       const data = await response.json();
       if (data.success) {
         setSession(data.session);
-        setQuestions(data.questions);
+        setQuestions(data.questions || []);
       }
     } catch (error) {
       console.error("Error fetching session:", error);

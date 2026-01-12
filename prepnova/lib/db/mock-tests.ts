@@ -43,6 +43,49 @@ export async function getSessionDetails(sessionId: string) {
 }
 
 /**
+ * Get session details with questions for review page
+ */
+export async function getSessionWithQuestions(sessionId: string) {
+  const session = await db.query.mockTestSessions.findFirst({
+    where: eq(mockTestSessions.id, sessionId),
+  });
+
+  if (!session) {
+    return { session: null, questions: [] };
+  }
+
+  // Get user progress for this session
+  const progress = await db.query.userProgress.findMany({
+    where: eq(userProgress.sessionId, sessionId),
+    with: {
+      question: true,
+    },
+  });
+
+  // Transform progress into question review format
+  const questions = progress.map((p) => {
+    const question = p.question;
+    const options = question?.options ? JSON.parse(question.options) : [];
+    
+    return {
+      questionId: p.questionId,
+      question: question?.question || "",
+      options,
+      correctAnswer: question?.correctAnswer || "",
+      userAnswer: p.userAnswer,
+      isCorrect: p.isCorrect,
+      explanation: question?.explanation || "",
+      subject: question?.subject || "",
+      topic: question?.topic || "",
+      difficulty: question?.difficulty || "",
+      timeSpent: p.timeSpent || 0,
+    };
+  });
+
+  return { session, questions };
+}
+
+/**
  * Update session progress
  */
 export async function updateSessionProgress(

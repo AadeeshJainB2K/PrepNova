@@ -88,14 +88,19 @@ Requirements:
 - Exactly 4 options (A, B, C, D)
 - One correct answer
 - Brief explanation (5-7 lines MAX)
+- For ANY mathematical expressions, use proper LaTeX with dollar sign delimiters:
+  - Use $...$ for inline math (e.g., $\\frac{1}{2}$, $\\sqrt{x}$, $\\omega = \\sqrt{\\frac{k}{m}}$)
+  - Use $$...$$ for display math on its own line
+  - NEVER use parentheses like (\\sqrt{}) - always use $\\sqrt{}$ instead
+  - Examples: $E = mc^2$, $F = ma$, $\\omega = \\sqrt{\\frac{3g}{2L}}$
 
 JSON format:
 {
-  "question": "question text",
-  "options": ["A text", "B text", "C text", "D text"],
+  "question": "question text with $math$ if needed",
+  "options": ["A text with $math$", "B text", "C text", "D text"],
   "correctAnswer": "A",
   "topic": "topic name",
-  "explanation": "Brief explanation with key concept, calculation, and why the answer is correct"
+  "explanation": "Brief explanation using $math$ for any formulas"
 }
 
 Generate the question now in JSON format:`;
@@ -206,6 +211,8 @@ Provide:
 2. Quick calculation
 3. Why ${correctAnswer} is correct
 ${!isCorrect ? `4. Why ${userAnswer} is wrong` : ""}
+
+IMPORTANT: Use proper LaTeX with $...$ for inline math (e.g., $\\frac{1}{2}$, $\\omega = \\sqrt{\\frac{k}{m}}$). NEVER use parentheses like (\\sqrt{}).
 
 Be concise:`;
 

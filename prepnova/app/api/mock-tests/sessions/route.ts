@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import {
   createMockTestSession,
-  getSessionDetails,
+  getSessionWithQuestions,
   updateSessionProgress,
   completeSession,
 } from "@/lib/db/mock-tests";
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const mockSession = await getSessionDetails(sessionId);
+    const { session: mockSession, questions } = await getSessionWithQuestions(sessionId);
 
     if (!mockSession) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
@@ -79,6 +79,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       session: mockSession,
+      questions: questions,
     });
   } catch (error) {
     console.error("Error fetching session:", error);
