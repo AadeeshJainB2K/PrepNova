@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -15,14 +15,15 @@ const geistMono = Geist_Mono({
   adjustFontFallback: false,
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   title: "PrepNova - AI-Powered Exam Preparation Platform",
   description: "Master your competitive exams with AI-powered mock tests, personalized analytics, and smart rank prediction for JEE, NEET, CLAT, and more",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
 };
 
 export default function RootLayout({

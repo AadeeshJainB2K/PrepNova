@@ -16,14 +16,14 @@ export function MobileMenu({ isOpen, onClose, session }: MobileMenuProps) {
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop - z-[100] to be above header (z-50) */}
       <div
-        className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+        className="fixed inset-0 bg-black/50 z-[100] lg:hidden"
         onClick={onClose}
       />
 
-      {/* Menu Drawer */}
-      <div className="fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-900 shadow-xl z-50 lg:hidden transform transition-transform duration-300">
+      {/* Menu Drawer - z-[110] to be above backdrop */}
+      <div className="fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-900 shadow-xl z-[110] lg:hidden">
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
@@ -32,7 +32,8 @@ export function MobileMenu({ isOpen, onClose, session }: MobileMenuProps) {
             </span>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 active:bg-gray-200 dark:active:bg-gray-700"
+              type="button"
             >
               <X className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </button>

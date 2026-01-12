@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Brain, TrendingUp, Users, Sparkles, Calendar, ShoppingBag, MessageSquare, Settings, Shield, Package, ShoppingCart, X } from "lucide-react";
+import { Home, BookOpen, Brain, TrendingUp, Users, Sparkles, Calendar, ShoppingBag, MessageSquare, Shield, Package, ShoppingCart, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Navigation configuration - easily extensible for future features
@@ -71,11 +71,6 @@ export const navItems = [
     icon: Shield,
     adminOnly: true,
   },
-  {
-    name: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
-  },
 ];
 
 interface AppSidebarProps {
@@ -94,17 +89,17 @@ export function AppSidebar({ user, isOpen = true, onClose }: AppSidebarProps) {
 
   return (
     <>
-      {/* Mobile Backdrop */}
+      {/* Mobile Backdrop - z-[100] to be above other elements */}
       {isOpen && onClose && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-[100] lg:hidden"
           onClick={onClose}
         />
       )}
 
       <aside
         className={cn(
-          "fixed lg:relative h-screen border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-transform duration-300 z-50",
+          "fixed lg:relative h-screen border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 z-[110]",
           "w-64",
           // Mobile: slide in from left
           "lg:translate-x-0",
@@ -115,8 +110,9 @@ export function AppSidebar({ user, isOpen = true, onClose }: AppSidebarProps) {
         {onClose && (
           <button
             onClick={onClose}
-            className="lg:hidden absolute right-4 top-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 touch-target z-10"
+            className="lg:hidden absolute right-4 top-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 z-10"
             aria-label="Close menu"
+            type="button"
           >
             <X className="h-5 w-5 text-gray-600 dark:text-gray-300" />
           </button>

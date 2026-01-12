@@ -122,6 +122,17 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Global touch improvements for all interactive elements */
+  button, a, [role="button"], input, select, textarea, label {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+  }
+  
+  input, select, textarea {
+    cursor: text;
+  }
 }
 
 @layer utilities {
@@ -129,6 +140,12 @@
   .touch-target {
     min-width: 44px;
     min-height: 44px;
+  }
+
+  /* Touch action manipulation - removes 300ms tap delay on mobile */
+  .touch-action-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Mobile-optimized scrolling */
