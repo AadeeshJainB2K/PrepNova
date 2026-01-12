@@ -1,10 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Fix workspace root warning - use this project's directory
-  turbopack: {
-    root: __dirname,
-  },
   devIndicators: {
     position: 'bottom-right',
   },
@@ -45,4 +41,3 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-

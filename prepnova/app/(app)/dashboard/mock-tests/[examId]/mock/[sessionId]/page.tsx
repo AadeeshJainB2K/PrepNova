@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useEffect, useCallback, useRef } from "react";
+import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft, Brain, Trophy, Loader2, CheckCircle, XCircle, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -42,12 +42,11 @@ export default function MockTestInterfacePage({
 
   const [session, setSession] = useState<MockTestSession | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
-  const [nextQuestion, setNextQuestion] = useState<Question | null>(null);
+  const [nextQuestion, setNextQuestion] = useState<Question | null>(null); // Pre-loaded next question
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatingStatus, setGeneratingStatus] = useState<string>(""); // Streaming status
-  const [isGeneratingNext, setIsGeneratingNext] = useState(false);
+  const [isGeneratingNext, setIsGeneratingNext] = useState(false); // Background generation
   const [showExplanation, setShowExplanation] = useState(false);
   const [feedback, setFeedback] = useState<{
     isCorrect: boolean;
@@ -55,12 +54,9 @@ export default function MockTestInterfacePage({
     explanation: string;
   } | null>(null);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
+  const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<number>(15); // Countdown timer
 
-  // Refs to prevent duplicate API calls
-  const hasInitiallyLoaded = useRef(false);
-  const isGeneratingRef = useRef(false);
-  const regenerationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
+  // Define functions before useEffect hooks to avoid hoisting issues
   const loadSession = useCallback(async () => {
     try {
       const response = await fetch(`/api/mock-tests/sessions?sessionId=${sessionId}`);
@@ -73,16 +69,8 @@ export default function MockTestInterfacePage({
     }
   }, [sessionId]);
 
-  // Streaming question generation
-  const generateNewQuestionStreaming = useCallback(async () => {
-    if (isGeneratingRef.current) {
-      console.log("⚠️ Already generating question, skipping duplicate call");
-      return;
-    }
-    
-    isGeneratingRef.current = true;
+  const generateNewQuestion = useCallback(async () => {
     setIsGenerating(true);
-    setGeneratingStatus("Initializing...");
     setSelectedAnswer(null);
     setFeedback(null);
     setShowExplanation(false);
@@ -97,125 +85,22 @@ export default function MockTestInterfacePage({
           examName: exam.name,
           difficulty: session?.difficulty || "Medium",
           sessionId,
-          stream: true, // Enable streaming
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to generate question");
-      }
-
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error("No response stream");
-
-      const decoder = new TextDecoder();
-      
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n').filter(line => line.trim());
-        
-        for (const line of lines) {
-          try {
-            const data = JSON.parse(line);
-            
-            if (data.type === 'status') {
-              setGeneratingStatus(data.message);
-            } else if (data.type === 'progress') {
-              setGeneratingStatus(`Generating... (${data.chars} chars)`);
-            } else if (data.type === 'complete' && data.success) {
-              setCurrentQuestion(data.question);
-              setGeneratingStatus("");
-            } else if (data.type === 'error') {
-              console.error("Stream error:", data.message);
-              alert(`Failed to generate question: ${data.message}`);
-            }
-          } catch {
-            // Ignore JSON parse errors for partial chunks
-          }
-        }
+      const data = await response.json();
+      if (data.success) {
+        setCurrentQuestion(data.question);
+      } else {
+        alert("Failed to generate question");
       }
     } catch (error) {
       console.error("Error generating question:", error);
       alert("Failed to generate question");
     } finally {
       setIsGenerating(false);
-      setGeneratingStatus("");
-      isGeneratingRef.current = false;
     }
   }, [examId, exam.name, session, sessionId]);
-
-  // Background streaming generation for next question
-  const generateNextQuestionInBackground = useCallback(async () => {
-    if (isGeneratingNext || nextQuestion) return;
-    
-    if (regenerationTimeoutRef.current) {
-      clearTimeout(regenerationTimeoutRef.current);
-    }
-    
-    setIsGeneratingNext(true);
-    
-    regenerationTimeoutRef.current = setTimeout(() => {
-      console.log("⚠️ Background generation timed out, resetting state");
-      setIsGeneratingNext(false);
-    }, 60000); // Increased timeout for Ollama
-    
-    try {
-      const response = await fetch("/api/mock-tests/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          examId,
-          examName: exam.name,
-          difficulty: session?.difficulty || "Medium",
-          sessionId,
-          stream: true,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to generate question");
-      }
-
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error("No response stream");
-
-      const decoder = new TextDecoder();
-      
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n').filter(line => line.trim());
-        
-        for (const line of lines) {
-          try {
-            const data = JSON.parse(line);
-            
-            if (data.type === 'complete' && data.success) {
-              setNextQuestion(data.question);
-              console.log("✅ Next question pre-loaded in background");
-            } else if (data.type === 'error') {
-              console.error("❌ Failed to pre-load next question:", data.message);
-            }
-          } catch {
-            // Ignore parse errors
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error pre-loading next question:", error);
-    } finally {
-      if (regenerationTimeoutRef.current) {
-        clearTimeout(regenerationTimeoutRef.current);
-        regenerationTimeoutRef.current = null;
-      }
-      setIsGeneratingNext(false);
-    }
-  }, [examId, exam.name, session, sessionId, isGeneratingNext, nextQuestion]);
 
   const advanceToNextQuestion = useCallback(() => {
     if (nextQuestion) {
@@ -225,6 +110,7 @@ export default function MockTestInterfacePage({
       setFeedback(null);
       setShowExplanation(false);
       setQuestionStartTime(Date.now());
+      setAutoAdvanceTimer(15);
     }
   }, [nextQuestion]);
 
@@ -235,13 +121,23 @@ export default function MockTestInterfacePage({
 
   // Generate first question
   useEffect(() => {
-    if (session && !currentQuestion && !nextQuestion && !hasInitiallyLoaded.current) {
-      hasInitiallyLoaded.current = true;
-      generateNewQuestionStreaming();
+    if (session && !currentQuestion && !nextQuestion) {
+      generateNewQuestion();
     }
-  }, [session, currentQuestion, nextQuestion, generateNewQuestionStreaming]);
+  }, [session, currentQuestion, nextQuestion, generateNewQuestion]);
 
-  // No auto-advance - user clicks manually
+  // Auto-advance timer when explanation is shown
+  useEffect(() => {
+    if (showExplanation && autoAdvanceTimer > 0) {
+      const timer = setTimeout(() => {
+        setAutoAdvanceTimer(autoAdvanceTimer - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (showExplanation && autoAdvanceTimer === 0 && nextQuestion) {
+      // Auto-advance to next question
+      advanceToNextQuestion();
+    }
+  }, [showExplanation, autoAdvanceTimer, nextQuestion, advanceToNextQuestion]);
 
   const handleSubmitAnswer = async () => {
     if (!selectedAnswer || !currentQuestion) return;
@@ -269,6 +165,7 @@ export default function MockTestInterfacePage({
           explanation: data.explanation,
         });
         setShowExplanation(true);
+        // Update session stats
         setSession((prev) => prev ? ({
           ...prev,
           totalQuestions: data.stats.totalQuestions,
@@ -284,6 +181,35 @@ export default function MockTestInterfacePage({
       alert("Failed to submit answer");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Generate next question in background while user reads explanation
+  const generateNextQuestionInBackground = async () => {
+    if (isGeneratingNext || nextQuestion) return;
+    
+    setIsGeneratingNext(true);
+    try {
+      const response = await fetch("/api/mock-tests/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          examId,
+          examName: exam.name,
+          difficulty: session?.difficulty || "Medium",
+          sessionId,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setNextQuestion(data.question);
+        console.log("✅ Next question pre-loaded in background");
+      }
+    } catch (error) {
+      console.error("Error pre-loading next question:", error);
+    } finally {
+      setIsGeneratingNext(false);
     }
   };
 
@@ -333,15 +259,11 @@ export default function MockTestInterfacePage({
           <div className="flex flex-col items-center justify-center gap-4">
             <Sparkles className="h-12 w-12 text-purple-600 animate-pulse" />
             <p className="text-lg font-medium text-gray-900 dark:text-gray-100">
-              {generatingStatus || "Generating your next question..."}
+              Generating your next question...
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               AI is creating a unique question just for you
             </p>
-            {/* Progress indicator */}
-            <div className="w-48 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-purple-600 to-pink-600 animate-pulse" style={{width: '60%'}} />
-            </div>
           </div>
         </div>
       ) : currentQuestion ? (
@@ -493,24 +415,38 @@ export default function MockTestInterfacePage({
                 </div>
               </div>
 
-              {/* Next Question UI */}
+              {/* Auto-advance UI */}
               <div className="space-y-3">
                 {/* Background loading indicator */}
                 {isGeneratingNext && (
                   <div className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <Sparkles className="h-4 w-4 animate-pulse text-purple-600" />
-                    <span>Preparing next question...</span>
+                    <span>Preparing next question in background...</span>
                   </div>
                 )}
                 
-                {/* Next question button */}
+                {/* Auto-advance button with timer */}
                 <button
                   onClick={advanceToNextQuestion}
                   disabled={!nextQuestion}
                   className="w-full rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-lg font-semibold text-white hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {nextQuestion ? "Next Question →" : "Loading Next Question..."}
+                  {nextQuestion ? (
+                    autoAdvanceTimer > 0 ? (
+                      `Next Question (Auto-advancing in ${autoAdvanceTimer}s) →`
+                    ) : (
+                      "Next Question →"
+                    )
+                  ) : (
+                    "Loading Next Question..."
+                  )}
                 </button>
+                
+                {nextQuestion && autoAdvanceTimer > 0 && (
+                  <p className="text-xs text-center text-gray-500 dark:text-gray-400">
+                    💡 Click to skip the wait, or it will auto-advance
+                  </p>
+                )}
               </div>
             </div>
           )}

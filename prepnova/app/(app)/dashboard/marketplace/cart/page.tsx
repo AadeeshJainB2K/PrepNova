@@ -1,9 +1,6 @@
 import { getCart } from "@/lib/marketplace/actions";
 import { CartClient } from "./CartClient";
 
-// Force dynamic rendering for authenticated routes
-export const dynamic = 'force-dynamic';
-
 // Server Component - fetches data on the server
 export default async function CartPage() {
   // Fetch cart items on the server
