@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useEffect, useCallback } from "react";
+import { use, useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeft, Brain, Trophy, Loader2, CheckCircle, XCircle, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -49,6 +49,10 @@ export default function MockTestInterfacePage({
   } | null>(null);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
 
+  // Refs to prevent duplicate API calls (React 18 Strict Mode protection)
+  const hasInitiallyLoaded = useRef(false);
+  const isGeneratingRef = useRef(false);
+
   const loadSession = useCallback(async () => {
     try {
       const response = await fetch(`/api/mock-tests/sessions?sessionId=${sessionId}`);
@@ -62,6 +66,13 @@ export default function MockTestInterfacePage({
   }, [sessionId]);
 
   const generateNewQuestion = useCallback(async () => {
+    // Prevent duplicate calls using ref
+    if (isGeneratingRef.current) {
+      console.log("⚠️ Already generating question, skipping duplicate call");
+      return;
+    }
+    
+    isGeneratingRef.current = true;
     setIsGenerating(true);
     setSelectedAnswer(null);
     setFeedback(null);
@@ -90,6 +101,7 @@ export default function MockTestInterfacePage({
       alert("Failed to generate question");
     } finally {
       setIsGenerating(false);
+      isGeneratingRef.current = false;
     }
   }, [examId, exam.name, session]);
 
@@ -98,9 +110,10 @@ export default function MockTestInterfacePage({
     loadSession();
   }, [loadSession]);
 
-  // Generate first question
+  // Generate first question - with ref guard to prevent duplicate calls from Strict Mode
   useEffect(() => {
-    if (session && !currentQuestion) {
+    if (session && !currentQuestion && !hasInitiallyLoaded.current) {
+      hasInitiallyLoaded.current = true;
       generateNewQuestion();
     }
   }, [session, currentQuestion, generateNewQuestion]);
