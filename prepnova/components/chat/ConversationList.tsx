@@ -6,6 +6,7 @@ import { MessageSquare, Plus, Sparkles, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { DeleteConfirmPopover } from "./DeleteConfirmPopover";
 
 interface Conversation {
   id: string;
@@ -24,6 +25,7 @@ export function ConversationList({ conversations: initialConversations, onSelect
   const pathname = usePathname();
   const [conversations, setConversations] = useState(initialConversations);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletePopoverOpen, setDeletePopoverOpen] = useState<string | null>(null);
 
   // Refresh conversation list when pathname changes (new chat created)
   useEffect(() => {
@@ -42,14 +44,7 @@ export function ConversationList({ conversations: initialConversations, onSelect
     refreshConversations();
   }, [pathname]);
 
-  const handleDelete = async (e: React.MouseEvent, conversationId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (!confirm("Are you sure you want to delete this conversation?")) {
-      return;
-    }
-
+  const handleDelete = async (conversationId: string) => {
     setDeletingId(conversationId);
     
     try {
@@ -99,6 +94,14 @@ export function ConversationList({ conversations: initialConversations, onSelect
                     : "hover:bg-gray-100 dark:hover:bg-gray-700 border border-transparent"
                 } ${isDeleting ? "opacity-50 pointer-events-none" : ""}`}
               >
+                {/* Delete Confirmation Popover - appears above this container */}
+                <DeleteConfirmPopover
+                  open={deletePopoverOpen === conversation.id}
+                  onOpenChange={(open) => setDeletePopoverOpen(open ? conversation.id : null)}
+                  onConfirm={() => handleDelete(conversation.id)}
+                  isDeleting={isDeleting}
+                />
+                
                 <Link
                   href={`/dashboard/chat/${conversation.id}`}
                   onClick={() => onSelect?.()}
@@ -124,7 +127,11 @@ export function ConversationList({ conversations: initialConversations, onSelect
                   </div>
                 </Link>
                 <button
-                  onClick={(e) => handleDelete(e, conversation.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setDeletePopoverOpen(conversation.id);
+                  }}
                   className="absolute top-1/2 -translate-y-1/2 right-2 sm:opacity-0 sm:group-hover:opacity-100 opacity-100 transition-opacity p-1.5 hover:bg-red-100 dark:hover:bg-red-900/30 rounded"
                   aria-label="Delete conversation"
                 >
